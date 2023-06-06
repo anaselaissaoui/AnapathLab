@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="./assets/tablogo.png" height="10px"type="image/x-icon">
+
+    <title>ANAPATHLAB</title>
+</head>
+
+<body style="padding-top: 50px;">
+
+    <div class="container bg-light rounded-4 py-2">
+     
+            <div class=" d-flex flex-column align-items-center">
+                <img src="./assets/Logo.png" alt="" style="max-width: 40%; max-height: 100%; ">
+                <h2 class="mb-4 text-center fw-bold text-prim text-uppercase" id="welcome">WELCOME</h2>
+                <div class="d-md-flex d-inline align-items-center my-5">
+                    <div class="person">
+                        <div class="container cont">
+                            <div class="container-inner" id="chef">
+                                <img class="circle bg-sec" src="" />
+                                <img class="img img1"  src="./assets/chef.png"/>
+                            </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="name">Chef</div>
+                        <div class="title">M.Chraibi</div>
+                    </div>
+                    <div class="person" >
+                        <div class="container cont">
+                            <div class="container-inner" id="major">
+                                <img class="circle bg-sec" src="" />
+                                <img class="img img2"  src="./assets/major.png"/>
+                            </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="name">Major</div>
+                        <div class="title">M.Bacha</div>
+                    </div>
+                </div>
+            </div>
+       
+        
+    </div>
+    <footer>
+        <p class="text-center text-secondary fw-medium my-2">ANAPATHLAB © 2023</p>
+    </footer>
+    <script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chefSignin = document.getElementById("chef");
+        const majorSignin = document.getElementById("major");
+
+        chefSignin.addEventListener("click", redirectChef);
+        function redirectChef() {
+            window.location.href = "src/signIn/chefSignIn.php";
+        }
+
+        majorSignin.addEventListener("click", redirectMajor);
+        function redirectMajor() {
+            window.location.href = "src/signIn/majorSignIn.php";
+        }
+
+        var word = document.getElementById("welcome");
+            var letters = word.textContent.split("");
+            var coloredWord = "";
+
+            for (var i = 0; i < letters.length; i++) {
+                if (i< 3) {
+                    coloredWord += '<span style="color:#56c4cf ;">' + letters[i] + '</span>';
+                } else {
+                    coloredWord += '<span style="color: #006db3;">' + letters[i] + '</span>';
+                }
+            }
+
+            word.innerHTML = coloredWord;
+    });
+</script>
+
+
+</body>
+
+</html>
