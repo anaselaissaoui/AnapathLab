@@ -5,7 +5,7 @@ require '../../database/dataBase.php';
 
 $queryMajor = "SELECT * FROM major WHERE maj_id = {$_SESSION['maj_id']}";
 
-$queryProducts = "SELECT * FROM product";
+$queryProducts = "SELECT * FROM product WHERE pro_availa='Disponible'";
 $contentTable = $conn->prepare($queryProducts);
 $contentTable->execute();
 $resultTable = $contentTable->fetchAll();
@@ -33,7 +33,7 @@ $resultTable = $contentTable->fetchAll();
 
 <body>
     <div class="modal-open">
-        <div class="modal fade show" id=#ModalCenter" tabindex="-3" role="dialog" aria-labelledby=#ModalCenterTitle" style="display: hidden;" aria-modal="true">
+        <div class="modal fade show" id="exampleModalCenter" tabindex="-3" role="dialog" aria-labelledby="exampleModalCenterTitle" style="display: hidden;" aria-modal="true">
         </div>
     </div>
     <div class="container-xxl position-relative bg-white d-flex p-0">
@@ -54,8 +54,15 @@ $resultTable = $contentTable->fetchAll();
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="./majorDashboard.php" class="nav-item nav-link active"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-                    <a href="#" class="nav-link nav-item"><i class="bi bi-archive-fill me-2"></i>Produits</a>
+                    <div class="nav-item dropdown">
+                        <a href="./dispoProducts.php" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="./dispoProducts.php" class="dropdown-item active">Disponible</a>
+                            <a href="./bEnRupProducts.php" class="dropdown-item">Bientôt En Rupture</a>
+                            <a href="./enRupProducts.php" class="dropdown-item">En Rupture</a>
+                        </div>
+                    </div>
+                    <a href="./products.php" class="nav-link nav-item"><i class="bi bi-archive-fill me-2"></i>Produits</a>
                 </div>
             </nav>
         </div>
@@ -72,9 +79,6 @@ $resultTable = $contentTable->fetchAll();
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="bi bi-list fs-3"></i>
                 </a>
-                <form method="post" class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
-                </form>
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -113,11 +117,15 @@ $resultTable = $contentTable->fetchAll();
             </nav>
             <!-- Navbar End -->
 
-            <!-- Table products Start -->
+            <!-- Recent Sales Start -->
             <div class="container-fluid pt-4 px-4">
+                <div class="d-flex justify-content-around mx-auto mb-3">
+                    <a src="./inStock.php" class="btn btn-grad" id="addStock"><i class="bi bi-download fs-4 me-2"></i>Ajouter au stock</a src="./outStock.php">
+                    <a src="./outStock.php" class="btn btn-grad1" id="outStock"><i class="bi bi-upload fs-4 me-2"></i>Sortie de stock</a src="./outStock.php">
+                </div>
                 <div class="bg-light  rounded p-4">
                     <div class="d-block align-items-center justify-content-between mb-4">
-                        <h4 class="me-2 ">Products</h4>
+                        <h4 class="me-2 ">Products En Stock</h4>
                         <div class="d-xxl-flex align-items-center justify-content-between mb-4 d-lg-inline justify-content-start d-sm-flex">
                             <form class="d-md-flex mw-100 pe-5">
                                 <input class="form-control border-0" id="search" type="search" placeholder="Search">
@@ -153,43 +161,14 @@ $resultTable = $contentTable->fetchAll();
                                     <th scope="col" style="width: 200px;">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="tableResult">
+                            <tbody id="tableResult" style="color:green;">
                                 <?php include "./tableProducts.php" ?>
                             </tbody>
                         </table>
-                        <nav aria-label="Page navigation example" class="mt-2">
-                            <ul class="pagination justify-content-center">
-                                <?php if ($currentPage > 1) : ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?php echo ($currentPage - 1); ?>" tabindex="-1">Previous</a>
-                                    </li>
-                                <?php else : ?>
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                <?php endif; ?>
-
-                                <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                                    <li class="page-item <?php if ($i == $currentPage) echo 'active'; ?>">
-                                        <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                    </li>
-                                <?php endfor; ?>
-
-                                <?php if ($currentPage < $totalPages) : ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?php echo ($currentPage + 1); ?>">Next</a>
-                                    </li>
-                                <?php else : ?>
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
                     </div>
                 </div>
             </div>
-            <!-- Table products End -->
+            <!-- Recent Sales End -->
 
 
             <!-- Content End -->
@@ -202,18 +181,18 @@ $resultTable = $contentTable->fetchAll();
         <script src="./main.js"></script>
 
         <script>
-
-     //Search And Filter function 
             $(document).ready(function() {
                 $('input[type=radio][name=btnradio]').change(function() {
                     var filterValue = $(this).val(); // get the value of the selected radio button
                     var searchValue = $('#search').val(); // get the value of the search input
+                    var disSituation = "Disponible";
                     $.ajax({
                         type: 'POST',
                         url: 'search.php',
                         data: {
                             filter: filterValue,
-                            search: searchValue
+                            search: searchValue,
+                            dispoSituation: disSituation
                         }, // send both the selected radio button value and search input value to the PHP script
                         success: function(response) {
                             // display the filtered results returned from the PHP script
@@ -226,13 +205,14 @@ $resultTable = $contentTable->fetchAll();
                     var search = $(this).val();
                     var filterValue = $('input[type=radio][name=btnradio]:checked')
                         .val(); // get the value of the checked radio button
+                    var disSituation = "Disponible";
                     $.ajax({
                         type: 'POST',
                         url: 'search.php',
                         data: {
-                            // send both the search input value and checked radio button value to the PHP script
                             search: search,
-                            filter: filterValue 
+                            dispoSituation: disSituation,
+                            filter: filterValue // send both the search input value and checked radio button value to the PHP script
                         },
                         success: function(response) {
                             $('#tableResult').html(response);
@@ -242,8 +222,46 @@ $resultTable = $contentTable->fetchAll();
 
 
 
+                $('#outStock').click(function(event) {
+                    event.preventDefault(); // Prevent the default behavior of the <a> element
+
+
+                    $.ajax({
+                        url: 'outStock.php',
+                        data: {},
+                        success: function(response) {
+                            console.log('done');
+                            $('#exampleModalCenter').html(response);
+                            $('#exampleModalCenter').modal('show');
+                        },
+                        error: function() {
+                            alert('Error fetching product data');
+                        }
+                    });
+                });
+
+
+                
+                $('#addStock').click(function(event) {
+                    event.preventDefault(); // Prevent the default behavior of the <a> element
+
+
+                    $.ajax({
+                        url: 'inStock.php',
+                        data: {},
+                        success: function(response) {
+                            console.log('done');
+                            $('#exampleModalCenter').html(response);
+                            $('#exampleModalCenter').modal('show');
+                        },
+                        error: function() {
+                            alert('Error fetching product data');
+                        }
+                    });
+                });
+
                 $('a[data-pro-id]').click(function(event) {
-                    event.preventDefault(); 
+                    event.preventDefault(); // Prevent the default behavior of the <a> element
 
                     var proId = $(this).data('pro-id');
 
@@ -255,8 +273,8 @@ $resultTable = $contentTable->fetchAll();
                         },
                         success: function(response) {
                             console.log('done');
-                            $('#ModalCenter').html(response);
-                            $('#ModalCenter').modal('show');
+                            $('#exampleModalCenter').html(response);
+                            $('#exampleModalCenter').modal('show');
                         },
                         error: function() {
                             alert('Error fetching product data');
@@ -281,10 +299,10 @@ $resultTable = $contentTable->fetchAll();
                     },
                     success: function(response) {
                         // Display the modal content in the placeholder element
-                        $('#ModalCenter').html(response);
+                        $('#exampleModalCenter').html(response);
 
                         // Show the modal
-                        $('#ModalCenter').modal('show');
+                        $('#exampleModalCenter').modal('show');
                     },
                     error: function(xhr, status, error) {
                         // Handle error if the AJAX request fails
@@ -302,9 +320,6 @@ $resultTable = $contentTable->fetchAll();
                 // Get the form values
                 var name = $('#name').val();
                 var unit = $('#unit').val();
-                var quantity = $('#quantity').val();
-                var date = $('#date').val();
-                var type = $('#type').val();
                 var condition = $('#condition').val();
                 var technics = $('#technics').val();
 
@@ -316,9 +331,6 @@ $resultTable = $contentTable->fetchAll();
                         pro_id: proId,
                         name: name,
                         unit: unit,
-                        quantity: quantity,
-                        date: date,
-                        type: type,
                         condition: condition,
                         technics: technics
                     },
@@ -326,56 +338,64 @@ $resultTable = $contentTable->fetchAll();
                         // Handle the success response if needed
                         console.log(response);
                         // Reload or update the table if required
-                        window.location.href = "./majorDashboard.php"; // Redirect to majorDashboard.php
+                        window.location.href = "./dispoProducts.php"; // Redirect to majorDashboard.php
                     },
                     error: function(xhr, status, error) {
                         // Handle error if the AJAX request fails
                         console.log(error);
                     }
                 });
+
+
+
+
             });
-
-
-
-
-
-
-
-            // function editProduct(proId) {
-            //     if (proId === undefined) {
-            //         console.warn('proId is undefined: ', proId)
-            //         return;
-            //     }
-            //     const booking = `<div class="modal bg-dark bg-opacity-75 py-5" id="modal" tabindex="-1">
-            //                         <div class="modal-dialog my-5">
-            //                         <div class="modal-content">
-            //                             <div class="modal-header">
-            //                             <h5 class="modal-title">Edit Product</h5>
-            //                             <button type="button" class="btn-close cloBtn"  data-bs-dismiss="modal" aria-label="Close"></button>
-            //                             </div>
-            //                             <div class="modal-body">
-            //                             <p>are you sure that you want to book this work ?</p>
-            //                             </div>
-            //                             <div class="modal-footer">
-            //                             <a type="button" class="btn btn-secondary cloBtn"  data-bs-dismiss="modal">Cancel</a>
-            //                             <a href="./confirmBook.php?id=` + proId + `" type="button" class="btn btn-primary">Confirm</a>
-            //                             </div>
-            //                         </div>
-            //                         </div>
-            //                     </div>`;
-            //     document.getElementById("search-results").insertAdjacentHTML("beforebegin", booking);
-            //     let modal = document.getElementById("modal");
-            //     modal.style.display = "block";
-
-            //     let closeButton = document.querySelectorAll(".cloBtn");
-            //     for (let i = 0; i < closeButton.length; i++) {
-            //         closeButton[i].addEventListener("click", function() {
-            //             modal.style.display = "none";
-            //         });
-            //     }
-            // };
         </script>
 </body>
 
 
 </html>
+
+<style>
+    .btn-grad,
+    .btn-grad1 {
+        margin: 10px;
+        padding: 25px 45px;
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+        box-shadow: 0 0 20px #eee;
+        border-radius: 10px;
+        display: block;
+    }
+
+    .btn-grad {
+        background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%);
+    }
+
+    .btn-grad1 {
+        background-image: linear-gradient(to right, #556270 0%, #FF6B6B 51%, #556270 100%);
+    }
+
+    .btn-grad:hover,
+    .btn-grad1:hover {
+        background-position: right center;
+        color: #fff;
+        text-decoration: none;
+    }
+
+
+
+    .sidebar .navbar .dropdown-item {
+        font-weight: 600;
+        padding-left: 38px;
+        width: 95%;
+        border-radius: 0 30px 30px 0;
+    }
+
+    .sidebar .navbar .dropdown-item:not(.active):hover {
+        background-color: lavender;
+    }
+</style>

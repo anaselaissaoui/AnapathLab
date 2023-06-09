@@ -41,7 +41,7 @@ CREATE TABLE Product(
    pro_unit VARCHAR(50),
    pro_quant INT,
    pro_techn VARCHAR(200),
-   pro_date_modif DATE,
+   pro_date_exp DATE,
    pro_condition VARCHAR(50),
    maj_id INT NOT NULL,
    FOREIGN KEY(maj_id) REFERENCES Major(maj_id)
@@ -152,3 +152,52 @@ VALUES
 ('sodium hydrogenophosphate', '(500g)', 1),
 ('Aluminum Sulfate', '500g', 1),
 ('Formol 30%', '20L', 1);
+
+
+
+
+
+INSERT INTO product (pro_name, pro_unit, maj_id, pro_type)
+VALUES 
+('Cristalisoir en verre BORA 140 mm', 'Unité', 1, 'Fongible'), 
+('Cristalisoir en verre BORA 115 mm', 'Unité', 1, 'Fongible'), 
+('Filtres RS', 'Unité', 1, 'Fongible'),
+('DIAPATH Bain de coloration', 'Unité', 1, 'Fongible'),
+('Lamelles 24x32', 'Unité', 1, 'Fongible'),
+('Lamelles 24x40', 'Unité', 1, 'Fongible'),
+('Lamelle couvre objet  24x60', 'Unité', 1, 'Fongible'),
+('Cassetes Rose', '1Sachet', 1, 'Fongible'),
+('Cassetes blanche', '1Sachet', 1, 'Fongible'),
+('Cassete jaune', '1Sachet', 1, 'Fongible'),
+('Cassete bleu', '1Sachet', 1, 'Fongible'),
+('Cassete jaune', '1Sachet', 1,'Fongible' ),
+('Tube Eppendorf (1000 µl)', 'Unité', 1, 'Fongible'),
+('Tube Eppendorf (100 µl)', 'Unité', 1, 'Fongible'),
+('Boites plastiques 5l', 'Unité', 1, 'Fongible'),
+('Porte lames de bistouris', 'Unité', 1, 'Fongible'),
+('Flacons plastiques  250 ml', 'Unité', 1, 'Fongible'),
+('Flacons plastiques  500 ml', 'Unité', 1, 'Fongible'),
+('Lames HE chargées positivement', 'Boite de 72', 1, 'Fongible'),
+('Lames de microscope slide', 'Cartons de 50 boites', 1, 'Fongible'),
+('Papier esuietout', 'Unité', 1, 'Fongible'),
+('Lames de rasoir S35', 'Boite de 50', 1, 'Fongible'),
+('Gants', 'Unité', 1, 'Fongible');
+
+
+
+
+
+
+
+
+
+
+
+
+UPDATE products
+JOIN (
+    SELECT pro_name, SUM(prod_quantity_bloc) AS total_quantity
+    FROM bloc_produit
+    GROUP BY pro_name
+) AS bloc_totals ON products.pro_name = bloc_totals.pro_name
+SET products.pro_quantity = bloc_totals.total_quantity;

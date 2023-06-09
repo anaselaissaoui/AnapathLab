@@ -11,16 +11,23 @@ echo "2";
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $html = '
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content rounded-0">
+  <div class="modal-dialog modal-lg  modal-dialog-centered" role="document">
+    <div class="modal-content rounded-4">
       <div class="modal-body py-0">
-        <div class="d-flex justify-content-evenly align-items-center">
-          <div class="content-text p-4 px-5 align-item-stretch">
-            <div class="text-center">
-              <h3 class="mb-3 text-primary line">'.$row['pro_name'].'</h3>
-              <p class="mb-5 fw-semibold">'.$row['pro_type'].'</p>
-              <p class="mb-5 fw-semibold">'.$row['pro_date_modif'].'</p>
-              <p class="mb-5 fw-bold">'.$row['pro_condition'].'</p>
+        <div class="d-flex row justify-content-center align-items-center">
+        <div class="col-6">
+        <img src="'.$row['pro_img'].'" width="100%" alt="'.$row['pro_name'].'">
+        <h5 class="text-center">'.$row['pro_date_exp'].'</h5>
+        </div>
+          <div class=" content-text col-6">
+            <div class="text-left">
+            <div class="d-inline-flex flex-wrap align-items-baseline">
+            <h3 class="text-primary me-1">'.$row['pro_name'].',</h3>
+            <p class=" fw-semibold me-1">'.$row['pro_type'].',</p>
+            <p class=" fw-normal">'.$row['pro_unit'].'</p>
+            </div>
+            <p class="fw-bold">Techniques : '.$row['pro_techn'].'</p>
+              <p class="fw-bold">Condition de Conservation : '.$row['pro_condition'].'</p>
             </div>
           </div>
           </div>

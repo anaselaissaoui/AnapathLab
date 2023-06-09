@@ -26,7 +26,7 @@ if (isset($_POST['submit'])) {
             if ($row['maj_email'] === $Email && $Password === $row['maj_mdp']) {
                 $_SESSION['maj_name'] = $row['maj_name'];
                 $_SESSION['maj_id'] = $row['maj_id'];
-                header("Location: ../dashboard/majorDashboard.php");
+                header("Location: ../dashboard/dispoProducts.php");
             }
         } else {
             $error = "*The Email or the Password is incorrect, try again.";

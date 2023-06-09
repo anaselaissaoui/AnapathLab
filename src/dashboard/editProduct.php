@@ -1,9 +1,4 @@
 <?php 
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 require '../../database/dataBase.php';
 
@@ -20,9 +15,7 @@ $resultEdit = $editProd ->fetchAll();
         if ($row['pro_id'] == $pro_id) {
             $Name = $row['pro_name'];
             $Unit = $row['pro_unit'];
-            $Quantity = $row['pro_quant'];
-            $Date = $row['pro_date_modif'];
-            $Type = $row['pro_type'];
+    
             $Condition = $row["pro_condition"];
             $Technics = $row['pro_techn'];
         }
@@ -30,45 +23,28 @@ $resultEdit = $editProd ->fetchAll();
 
 
     $html = '<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content rounded-0">
-      <div class="modal-body py-0">
-        <div class="d-flex justify-content-evenly align-items-center">
+    <div class="modal-content rounded-4">
+      <div class="modal-body py-0 px-6">
+
           <div class="content-text p-4 px-5 align-item-stretch">
           <form method="POST" class="edit-form" enctype="multipart/form-data">
-          <div class="col-md-6 text-center mb-5">
+          <div class=" text-center mb-5">
               <h2 class="heading-section">Edit Product</h2>
           </div>
           <!-- name -->
           <div class="form-group">
+          <label for="name" class="form-label">Nom:</label>
               <input type="text" id="name" class="form-control" placeholder="" name="name" value="'.$Name.'">
           </div>
           <!-- Unit -->
           <div class="form-group">
+          <label for="unit" class="form-label">Unit:</label>
               <input type="text" id="unit" name="unit" class="form-control" placeholder="unit" value="'. $Unit.'">
           </div>
-          <!-- Quantity -->
-          <div class="form-group">
-              <input type="number" id="quantity" name="quantity" class="form-control" placeholder="quantity" value="'. $Quantity.'">
-          </div>
-
-          <!-- date -->
-          <div class="form-group">
-              <input type="date" id="date" name="date" class="form-control" placeholder="Offer date" value="'. $Date.'">
-          </div>
-
-          <!-- Type -->
-          <div class="form-group">
-              <select id="type" name="type" class="form-control form-select border-0 py-3">
-                  <option value="'. $Type.'">Current Type : '. $Type.' </option>
-                  <option value="Chimique">Chimique</option>
-                  <option value="Fongible">Fongible</option>
-                  <option value="Immuno">Immuno</option>
-              </select>
-          </div>
-
           <!-- Condition de Conservation -->
           <div class="form-group">
-              <select id="condition" name="condition" class="form-control form-select border-0 py-3">
+          <label for="condition" class="form-label">Condition de Conservation:</label>
+              <select id="condition" name="condition" class="form-control form-select  py-3">
                   <option value="'. $Condition.'">Current Condition : '. $Condition.' </option>
                   <option value="+15 à +25°C">+15 à +25°C</option>
                   <option value="+4°C">+4°C</option>
@@ -77,21 +53,22 @@ $resultEdit = $editProd ->fetchAll();
           
           <!-- techniques -->
           <div class="form-group">
-              <select id="technics" name="technics" class="form-control form-select border-0 py-3">
+          <label for="technics" class="form-label">Techniques:</label>
+              <select id="technics" name="technics" class="form-control form-select py-3">
                   <option value="'. $Technics.'">Current Techniques : '. $Technics.' </option>
                   <option value="tech1">tech1</option>
                   <option value="tech2">tech2</option>
               </select>
           </div>
           
-          <div class="form-group">
-              <button name="submit" id="'.$pro_id.'" class="form-control btn btn-success submit editBtn px-3">Edit Product</button>
-              <button name="Cancel" class="form-control btn btn-success submit px-3">Cancel</button>
+          <div class="form-group d-flex justify-content-around">
+          <button name="Cancel" style="background-color:#56c4cf; color:white;" class="form-control btn w-25">Cancel</button>
+              <button name="submit" id="'.$pro_id.'" class="form-control btn editBtn btn-primary confirm w-25 ">Edit Product</button>
           </div>
           
       </form>
           </div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -100,60 +77,15 @@ $resultEdit = $editProd ->fetchAll();
 echo $html;
 
 ?>
-<!-- <style>
- 
+<style>
+ .form-group{
+    margin-bottom: 16px;
+ }
+ .form-label{
+    margin: 0;
+ }
 
-    form.edit-form {
-        background-color: #c5c5c5d6;
-        /* height: 31rem; */
-        border-radius: 17px;
-        text-align: -webkit-center;
-    }
-
-    h2.heading-section {
-        color: #6c6c6c;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-    }
-
-
-    .dropzone {
-        width: 100px;
-        height: 100px;
-        border: 1px dashed #999;
-        border-radius: 3px;
-        text-align: center;
-        margin: 6px 6px;
-    }
-
-
-
-
-
-    .dropzone.col-md-3 {
-        margin: 0px 3px;
-        background-color: #f0f0f0;
-    }
-
-    .form-group.col-md-12 {
-        display: flex;
-        flex-direction: revert;
-        margin: 29px 7px 13px 11px;
-    }
-
-    input.form-control {
-        margin: 11px 0px 11px 0px;
-        background-color: #ffffffe0;
-        padding: 8px 18px;
-    }
-
-    select.form-control.form-select.border-0.py-3 {
-        margin: 11px 0px 11px 0px;
-        background-color: #ffffffe0;
-        padding: 8px 18px;
-    }
-</style> -->
+ .btn:hover {
+  box-shadow: inset 0 0 0 10rem gray;
+}
+</style>
