@@ -1,110 +1,85 @@
 <?php
 require '../../database/dataBase.php';
 
-$query = "SELECT *
-FROM product;";
-$inStock = $conn->prepare($query);
-$inStock->execute();
-$result = $inStock->fetchAll();
+$prodCount = $_POST['prodCount'];
+$prodNCount = $_POST['prodNCount'];
 
-$html = '
-<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-  <div class="modal-content rounded-4">
-    <div class="modal-body py-0 px-6">
-      <div class="content-text p-4 px-5 align-item-stretch">
-        <form method="POST" class="inStockForm" enctype="multipart/form-data">
-          <div class="text-center mb-5">
-            <h2 class="heading-section">Entrée De Produit(s)</h2>
-          </div>
-          
-          <div class="rounded-3 bg-light p-4">
-            <!-- fournisseur -->
-                <div class="form-group mb-3">
-                    <label for="fournisseur1" class="form-label">Fournisseur:</label>
-                    <select id="fournisseur1" name="fournisseur1" class="form-control form-select">
-                    <option value=""></option>';
-                        foreach ($result as $row) {
-                            $name = $row['pro_name'];
-                            $html .= "<option value=\"$name\">$name</option>";
-                        }
-                    $html .= '
-                    </select>
-                </div>
-        </div>
-          
-          <div id="additional-fields"></div>
-          
-          <div class="form-group my-3">
-            <a id="addMore" class="btn btn btn-outline-info">New Supplier</a>
-          </div>
-          
-          <div class="form-group d-flex justify-content-around">
-            <button name="cancel" style="background-color:#56c4cf; color:white;" class="form-control btn w-25">Cancel</button>
-            <button type="submit" name="submit" class="form-control btn btn-primary confirmInStock w-25">Suivant</button>
-          </div>
-          
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-';
+for ($i = 1; $i <= $prodCount; $i++) {
+    $productName = $_POST['nameP'.$i];
+    $quantity = $_POST['quantity'.$i];
 
-echo $html;
+    $existingProduct = "SELECT pro_id, pro_quant FROM product WHERE pro_name = :productName";
+    $stmt = $conn->prepare($existingProduct);
+    $stmt->bindParam(':productName', $productName);
+    $stmt->execute();
+    $result = $stmt->fetch();
+
+    $newQuantity = $result['pro_quant'] + $quantity;
+    $updateQuery = "UPDATE product SET pro_quant = :newQuantity WHERE pro_name = :productName";
+    $updateStmt = $conn->prepare($updateQuery);
+    $updateStmt->bindValue(':newQuantity', $newQuantity);
+    $updateStmt->bindValue(':productName', $productName);
+    $updateStmt->execute();
+}
+
+if ($prodNCount > 0) {
+    for ($i = 1; $i <= $prodNCount; $i++) {
+        $productNewName = $_POST['nameNP' . $i];
+        $quantityNew = $_POST['quantityNP' . $i];
+        $unit = $_POST['unit' . $i];
+        $type = $_POST['type' . $i];
+        $condition = $_POST['condition' . $i];
+        $dateExp = $_POST['dateExp' . $i];
+        $technics = isset($_POST['technics' . $i]) ? $_POST['technics' . $i] : array();
+
+        // Get the product image file
+        $productImage = $_FILES['files']['name'][$i - 1];
+        $productImageTmp = $_FILES['files']['tmp_name'][$i - 1];
+
+        // Check if a file was uploaded
+        if (!empty($productImage)) {
+            // Process the uploaded file
+            $uploadDirectory = '../../assets/';
+            $uploadedFileName = basename($productImage);
+            $targetFilePath = $uploadDirectory . $uploadedFileName;
+            $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+
+            // Validate the file type (you can customize the allowed types)
+            $allowedFileTypes = array('jpg', 'jpeg', 'png', 'gif');
+            if (!in_array($fileType, $allowedFileTypes)) {
+                // Handle invalid file type error
+                $response = array('status' => 'error', 'message' => 'Invalid file type. Please upload a JPG, JPEG, PNG, or GIF file.');
+                echo json_encode($response);
+                exit;
+            }
+
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($productImageTmp, $targetFilePath)) {
+                // Example: Add the product image path to the insert/update query
+                $technicsImploded = implode(', ', $technics);
+
+                $insertQuery = "INSERT INTO product (pro_name, pro_unit, pro_quant, pro_type, pro_condition, pro_date_exp, pro_techn, pro_img, pro_availa, maj_id)
+                VALUES (:productNewName, :unit, :quantityNew, :productType, :productCondition, :expirationDate, :techniques, :image, :pro_availa, :maj_id)";
+                $insertStmt = $conn->prepare($insertQuery);
+                $insertStmt->bindValue(':productNewName', $productNewName);
+                $insertStmt->bindValue(':unit', $unit);
+                $insertStmt->bindValue(':quantityNew', $quantityNew);
+                $insertStmt->bindValue(':productType', $type);
+                $insertStmt->bindValue(':productCondition', $condition);
+                $insertStmt->bindValue(':expirationDate', $dateExp);
+                $insertStmt->bindValue(':techniques', $technicsImploded);
+                $insertStmt->bindValue(':image', $targetFilePath);
+                $insertStmt->bindValue(':pro_availa', "Disponible");
+                $insertStmt->bindValue(':maj_id', "1");
+                $insertStmt->execute();
+            } else {
+                // Handle file upload error
+                $response = array('status' => 'error', 'message' => 'Failed to upload the product image.');
+                echo json_encode($response);
+                exit;
+            }
+        }
+    }
+}
+exit;
 ?>
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    $(document).ready(function() {
-        $("#addMore").click(function() {
-            var html = `<div class="rounded-3 bg-light p-4 mt-4">
-                            <div class="form-group mb-3">
-                                <!-- name -->
-                                <label for="fournisseur" class="form-label">Fournisseur:</label>
-                                <input type="text" id="fournisseur" class="form-control" placeholder="Fournisseur" name="fournisseur">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="email" class="form-label">Email: </label>
-                                <input type="email" name="email" class="form-control" placeholder="Email">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="phone" class="form-label">Telephone: </label>
-                                <input type="number" name="phone" class="form-control" placeholder="Numero de Telephone">
-                            </div>
-                            
-                        </div>`;
-
-
-
-            $("#additional-fields").append(html);
-            $("#fournisseur1").prop("disabled", true);
-
-        });
-
-        $(document).on('submit', '.inStockForm', function(e) {
-            e.preventDefault();
-
-            // Get the form data
-            var formData = $(this).serialize();
-
-            // Make an AJAX request to productsInStock.php
-            $.ajax({
-                url: './productsInStock.php',
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    // Handle the success response if needed
-                    console.log(response);
-                    window.location.href = "./dispoProducts.php"; // Redirect to majorDashboard.php
-
-                },
-                error: function(xhr, status, error) {
-                    // Handle error if the AJAX request fails
-                    console.log(error);
-                }
-            });
-        });
-    });
-</script>

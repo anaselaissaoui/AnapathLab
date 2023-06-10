@@ -311,6 +311,8 @@ $resultTable = $contentTable->fetchAll();
                 });
             });
 
+            
+
             $(document).on('click', '.editBtn', function(e) {
                 e.preventDefault();
 
@@ -346,10 +348,8 @@ $resultTable = $contentTable->fetchAll();
                     }
                 });
 
-
-
-
             });
+            
         </script>
 </body>
 

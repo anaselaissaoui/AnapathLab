@@ -1,11 +1,12 @@
 <?php
 require '../../database/dataBase.php';
 
-if (!empty($_POST['name']) && !empty($_POST['quantity'])) {
+if (isset($_POST['submit'])) {
   // Collect the data from the form
   $names = $_POST['name'];
   $quantities = $_POST['quantity'];
 
+  // Loop through the collected data
   foreach ($names as $index => $name) {
     $quantity = $quantities[$index];
 
