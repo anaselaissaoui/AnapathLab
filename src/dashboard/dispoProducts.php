@@ -9,7 +9,10 @@ $queryProducts = "SELECT * FROM product WHERE pro_availa='Disponible'";
 $contentTable = $conn->prepare($queryProducts);
 $contentTable->execute();
 $resultTable = $contentTable->fetchAll();
-
+$queryNotifications = "SELECT * FROM notifications";
+$contentNotifications = $conn->prepare($queryNotifications);
+$contentNotifications->execute();
+$resultNotifications = $contentNotifications->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +35,14 @@ $resultTable = $contentTable->fetchAll();
 </head>
 
 <body>
+<?php 
+  // Check if the user is logged in
+  if (!isset($_SESSION['maj_name'])) {
+    // Redirect the user to the login page
+    header("Location: ../../index.html");
+    exit;
+  }
+  ?>
     <div class="modal-open">
         <div class="modal fade show" id="exampleModalCenter" tabindex="-3" role="dialog" aria-labelledby="exampleModalCenterTitle" style="display: hidden;" aria-modal="true">
         </div>
@@ -80,277 +91,284 @@ $resultTable = $contentTable->fetchAll();
                     <i class="bi bi-list fs-3"></i>
                 </a>
                 <div class="navbar-nav align-items-center ms-auto">
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
-                        </a>
-                        <div class="dropdown-menu  text-white bg-secondary dropdown-menu-end  border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item text-white ">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white">
-                                <h6 class="fw-normal mb-0">New user added</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white">
-                                <h6 class="fw-normal mb-0">Password changed</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white text-center">See all notifications</a>
-                        </div>
-                    </div>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2 bg-white" src="../../assets/majorUser.png" alt="" style="width: 45px; height: 45px;">
-                            <span class="d-none d-lg-inline-flex"><?php echo $_SESSION['maj_name'] ?></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="../signOut/signOut.php" class="dropdown-item  text-white bg-secondary">Log Out</a>
-                        </div>
+                <div class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+        <?php $notificationCount = count($resultNotifications); ?>
+        <?php if ($notificationCount > 0) : ?>
+            <span class="position-absolute top-25 start-0 badge rounded-pill bg-danger"><?php echo $notificationCount; ?></span>
+        <?php endif; ?>
+        <i class="fa fa-bell me-lg-2"></i>
+        <span class="d-none d-lg-inline-flex">Notification</span>
+    </a>
+    <div class="dropdown-menu border border-left-0 border-right-0 border-bottom-0 rounded-0 rounded-bottom bg-secondary-emphasis dropdown-menu-end m-0">
+        <?php $reversedNotifications = array_reverse($resultNotifications); ?>
+        <?php $limitedNotifications = array_slice($reversedNotifications, 0, 8); ?>
+        <?php foreach ($limitedNotifications as $notification) : ?>
+            <a href="#" class="dropdown-item text-white d-flex justify-content-between align-items-center">
+                <?php $statusClass = ($notification['new_status'] == 'Bientôt En Rupture') ? 'text-warning' : 'text-danger'; ?>
+                <h6 style="font-size: 12px;" class="fw-bold mb-0 me-2 <?php echo $statusClass; ?>">
+                    <?php echo $notification['product_name']; ?> is <?php echo $notification['new_status']; ?>
+                </h6>
+                <small style="font-size: 8px;" class="fw-bold <?php echo $statusClass; ?>"><?php echo $notification['created_at']; ?></small>
+            </a>
+            <hr class="dropdown-divider">
+        <?php endforeach; ?>
+        <?php if ($notificationCount > 8) : ?>
+        <?php endif; ?>
+        <a href="#" class="dropdown-item text-center">See all notifications</a>
+    </div>
+</div>
+
+
+
+
+
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <img class="rounded-circle me-lg-2 bg-white" src="../../assets/majorUser.png" alt="" style="width: 45px; height: 45px;">
+                        <span class="d-none d-lg-inline-flex"><?php echo $_SESSION['maj_name'] ?></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                        <a href="../signOut/signOut.php" class="dropdown-item  text-white bg-secondary">Log Out</a>
                     </div>
                 </div>
-            </nav>
-            <!-- Navbar End -->
+        </div>
+        </nav>
+        <!-- Navbar End -->
 
-            <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="d-flex justify-content-around mx-auto mb-3">
-                    <a src="./inStock.php" class="btn btn-grad" id="addStock"><i class="bi bi-download fs-4 me-2"></i>Ajouter au stock</a src="./outStock.php">
-                    <a src="./outStock.php" class="btn btn-grad1" id="outStock"><i class="bi bi-upload fs-4 me-2"></i>Sortie de stock</a src="./outStock.php">
-                </div>
-                <div class="bg-light  rounded p-4">
-                    <div class="d-block align-items-center justify-content-between mb-4">
-                        <h4 class="me-2 ">Products En Stock</h4>
-                        <div class="d-xxl-flex align-items-center justify-content-between mb-4 d-lg-inline justify-content-start d-sm-flex">
-                            <form class="d-md-flex mw-100 pe-5">
-                                <input class="form-control border-0" id="search" type="search" placeholder="Search">
-                            </form>
-                            <div class="">
-                                <div class="bg-light rounded d-flex align-items-baseline ">
-                                    <div class="btn-group" role="group">
-                                        <input type="radio" class="btn-check" name="btnradio" value="Tous" id="Tous" autocomplete="off" checked="">
-                                        <label class="btn btn-outline-primary" for="Tous">Tous</label>
+        <!-- Recent Sales Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="d-flex justify-content-around mx-auto mb-3">
+                <a src="./inStock.php" class="btn btn-grad" id="addStock"><i class="bi bi-download fs-4 me-2"></i>Ajouter au stock</a src="./outStock.php">
+                <a src="./outStock.php" class="btn btn-grad1" id="outStock"><i class="bi bi-upload fs-4 me-2"></i>Sortie de stock</a src="./outStock.php">
+            </div>
+            <div class="bg-light  rounded p-4">
+                <div class="d-block align-items-center justify-content-between mb-4">
+                    <h4 class="me-2 ">Products En Stock</h4>
+                    <div class="d-xxl-flex align-items-center justify-content-between mb-4 d-lg-inline justify-content-start d-sm-flex">
+                        <form class="d-md-flex mw-100 pe-5">
+                            <input class="form-control border-0" id="search" type="search" placeholder="Search">
+                        </form>
+                        <div class="">
+                            <div class="bg-light rounded d-flex align-items-baseline ">
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" name="btnradio" value="Tous" id="Tous" autocomplete="off" checked="">
+                                    <label class="btn btn-outline-primary" for="Tous">Tous</label>
 
-                                        <input type="radio" class="btn-check" name="btnradio" value="Chimique" id="Chimique" autocomplete="off">
-                                        <label class="btn btn-outline-primary" for="Chimique">Chimique</label>
+                                    <input type="radio" class="btn-check" name="btnradio" value="Chimique" id="Chimique" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="Chimique">Chimique</label>
 
-                                        <input type="radio" class="btn-check" name="btnradio" value="Fongible" id="Fongible" autocomplete="off">
-                                        <label class="btn btn-outline-primary" for="Fongible">Fongible</label>
+                                    <input type="radio" class="btn-check" name="btnradio" value="Fongible" id="Fongible" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="Fongible">Fongible</label>
 
-                                        <input type="radio" class="btn-check" name="btnradio" value="Immuno" id="Immuno" autocomplete="off">
-                                        <label class="btn btn-outline-primary" for="Immuno">Immuno</label>
-                                    </div>
+                                    <input type="radio" class="btn-check" name="btnradio" value="Immuno" id="Immuno" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="Immuno">Immuno</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-dark text-center" style="vertical-align: middle;">
-                                    <th scope="col">Produit</th>
-                                    <th scope="col">Quantite</th>
-                                    <th scope="col" style="width: 120px;">Date</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Condition de conservation</th>
-                                    <th scope="col" style="width: 200px;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableResult" style="color:green;">
-                                <?php include "./tableProducts.php" ?>
-                            </tbody>
-                        </table>
-                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-start align-middle table-bordered table-hover mb-0">
+                        <thead>
+                            <tr class="text-dark text-center" style="vertical-align: middle;">
+                                <th scope="col">Produit</th>
+                                <th scope="col">Quantite</th>
+                                <th scope="col" style="width: 120px;">Date</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Condition de conservation</th>
+                                <th scope="col" style="width: 200px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableResult" style="color:green;">
+                            <?php include "./tableProducts.php" ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <!-- Recent Sales End -->
-
-
-            <!-- Content End -->
         </div>
+        <!-- Recent Sales End -->
 
 
-        <!-- JavaScript -->
+        <!-- Content End -->
+    </div>
 
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="./main.js"></script>
 
-        <script>
-            $(document).ready(function() {
-                $('input[type=radio][name=btnradio]').change(function() {
-                    var filterValue = $(this).val(); // get the value of the selected radio button
-                    var searchValue = $('#search').val(); // get the value of the search input
-                    var disSituation = "Disponible";
-                    $.ajax({
-                        type: 'POST',
-                        url: 'search.php',
-                        data: {
-                            filter: filterValue,
-                            search: searchValue,
-                            dispoSituation: disSituation
-                        }, // send both the selected radio button value and search input value to the PHP script
-                        success: function(response) {
-                            // display the filtered results returned from the PHP script
-                            $('#tableResult').html(response);
-                        }
-                    });
+    <!-- JavaScript -->
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="./main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('input[type=radio][name=btnradio]').change(function() {
+                var filterValue = $(this).val(); // get the value of the selected radio button
+                var searchValue = $('#search').val(); // get the value of the search input
+                var disSituation = "Disponible";
+                $.ajax({
+                    type: 'POST',
+                    url: 'search.php',
+                    data: {
+                        filter: filterValue,
+                        search: searchValue,
+                        dispoSituation: disSituation
+                    }, // send both the selected radio button value and search input value to the PHP script
+                    success: function(response) {
+                        // display the filtered results returned from the PHP script
+                        $('#tableResult').html(response);
+                    }
                 });
-
-                $('#search').keyup(function() {
-                    var search = $(this).val();
-                    var filterValue = $('input[type=radio][name=btnradio]:checked')
-                        .val(); // get the value of the checked radio button
-                    var disSituation = "Disponible";
-                    $.ajax({
-                        type: 'POST',
-                        url: 'search.php',
-                        data: {
-                            search: search,
-                            dispoSituation: disSituation,
-                            filter: filterValue // send both the search input value and checked radio button value to the PHP script
-                        },
-                        success: function(response) {
-                            $('#tableResult').html(response);
-                        }
-                    });
-                });
-
-
-
-                $('#outStock').click(function(event) {
-                    event.preventDefault(); // Prevent the default behavior of the <a> element
-
-
-                    $.ajax({
-                        url: 'outStock.php',
-                        data: {},
-                        success: function(response) {
-                            console.log('done');
-                            $('#exampleModalCenter').html(response);
-                            $('#exampleModalCenter').modal('show');
-                        },
-                        error: function() {
-                            alert('Error fetching product data');
-                        }
-                    });
-                });
-
-
-                
-                $('#addStock').click(function(event) {
-                    event.preventDefault(); // Prevent the default behavior of the <a> element
-
-
-                    $.ajax({
-                        url: 'inStock.php',
-                        data: {},
-                        success: function(response) {
-                            console.log('done');
-                            $('#exampleModalCenter').html(response);
-                            $('#exampleModalCenter').modal('show');
-                        },
-                        error: function() {
-                            alert('Error fetching product data');
-                        }
-                    });
-                });
-
-                $('a[data-pro-id]').click(function(event) {
-                    event.preventDefault(); // Prevent the default behavior of the <a> element
-
-                    var proId = $(this).data('pro-id');
-
-                    $.ajax({
-                        url: 'details.php',
-                        type: 'POST',
-                        data: {
-                            pro_id: proId
-                        },
-                        success: function(response) {
-                            console.log('done');
-                            $('#exampleModalCenter').html(response);
-                            $('#exampleModalCenter').modal('show');
-                        },
-                        error: function() {
-                            alert('Error fetching product data');
-                        }
-                    });
-                });
-
             });
 
-            $(document).on('click', '.edit-button', function(e) {
-                e.preventDefault();
-
-                // Get the pro_id from the button
-                var proId = $(this).attr('id');
-
-                // Make an AJAX request to retrieve the modal content from editProduct.php
+            $('#search').keyup(function() {
+                var search = $(this).val();
+                var filterValue = $('input[type=radio][name=btnradio]:checked')
+                    .val(); // get the value of the checked radio button
+                var disSituation = "Disponible";
                 $.ajax({
-                    url: './editProduct.php',
-                    type: 'GET',
+                    type: 'POST',
+                    url: 'search.php',
                     data: {
-                        id: proId
+                        search: search,
+                        dispoSituation: disSituation,
+                        filter: filterValue // send both the search input value and checked radio button value to the PHP script
                     },
                     success: function(response) {
-                        // Display the modal content in the placeholder element
-                        $('#exampleModalCenter').html(response);
+                        $('#tableResult').html(response);
+                    }
+                });
+            });
 
-                        // Show the modal
+
+
+            $('#outStock').click(function(event) {
+                event.preventDefault(); // Prevent the default behavior of the <a> element
+
+
+                $.ajax({
+                    url: 'outStock.php',
+                    data: {},
+                    success: function(response) {
+                        console.log('done');
+                        $('#exampleModalCenter').html(response);
                         $('#exampleModalCenter').modal('show');
                     },
-                    error: function(xhr, status, error) {
-                        // Handle error if the AJAX request fails
-                        console.log(error);
+                    error: function() {
+                        alert('Error fetching product data');
                     }
                 });
             });
 
-            
 
-            $(document).on('click', '.editBtn', function(e) {
-                e.preventDefault();
 
-                // Get the pro_id from the button
-                var proId = $(this).attr('id');
+            $('#addStock').click(function(event) {
+                event.preventDefault(); // Prevent the default behavior of the <a> element
 
-                // Get the form values
-                var name = $('#name').val();
-                var unit = $('#unit').val();
-                var condition = $('#condition').val();
-                var technics = $('#technics').val();
 
-                // Make an AJAX request to confirmEdit.php
                 $.ajax({
-                    url: './confirmEdit.php',
+                    url: 'inStock.php',
+                    data: {},
+                    success: function(response) {
+                        console.log('done');
+                        $('#exampleModalCenter').html(response);
+                        $('#exampleModalCenter').modal('show');
+                    },
+                    error: function() {
+                        alert('Error fetching product data');
+                    }
+                });
+            });
+
+            $('a[data-pro-id]').click(function(event) {
+                event.preventDefault(); // Prevent the default behavior of the <a> element
+
+                var proId = $(this).data('pro-id');
+
+                $.ajax({
+                    url: 'details.php',
                     type: 'POST',
                     data: {
-                        pro_id: proId,
-                        name: name,
-                        unit: unit,
-                        condition: condition,
-                        technics: technics
+                        pro_id: proId
                     },
                     success: function(response) {
-                        // Handle the success response if needed
-                        console.log(response);
-                        // Reload or update the table if required
-                        window.location.href = "./dispoProducts.php"; // Redirect to majorDashboard.php
+                        console.log('done');
+                        $('#exampleModalCenter').html(response);
+                        $('#exampleModalCenter').modal('show');
                     },
-                    error: function(xhr, status, error) {
-                        // Handle error if the AJAX request fails
-                        console.log(error);
+                    error: function() {
+                        alert('Error fetching product data');
                     }
                 });
-
             });
-            
-        </script>
+
+        });
+
+        $(document).on('click', '.edit-button', function(e) {
+            e.preventDefault();
+
+            // Get the pro_id from the button
+            var proId = $(this).attr('id');
+
+            // Make an AJAX request to retrieve the modal content from editProduct.php
+            $.ajax({
+                url: './editProduct.php',
+                type: 'GET',
+                data: {
+                    id: proId
+                },
+                success: function(response) {
+                    // Display the modal content in the placeholder element
+                    $('#exampleModalCenter').html(response);
+
+                    // Show the modal
+                    $('#exampleModalCenter').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    // Handle error if the AJAX request fails
+                    console.log(error);
+                }
+            });
+        });
+
+
+
+        $(document).on('click', '.editBtn', function(e) {
+            e.preventDefault();
+
+            // Get the pro_id from the button
+            var proId = $(this).attr('id');
+
+            // Get the form values
+            var name = $('#name').val();
+            var unit = $('#unit').val();
+            var condition = $('#condition').val();
+            var technics = $('#technics').val();
+
+            // Make an AJAX request to confirmEdit.php
+            $.ajax({
+                url: './confirmEdit.php',
+                type: 'POST',
+                data: {
+                    pro_id: proId,
+                    name: name,
+                    unit: unit,
+                    condition: condition,
+                    technics: technics
+                },
+                success: function(response) {
+                    // Handle the success response if needed
+                    console.log(response);
+                    // Reload or update the table if required
+                    window.location.href = "./dispoProducts.php"; // Redirect to majorDashboard.php
+                },
+                error: function(xhr, status, error) {
+                    // Handle error if the AJAX request fails
+                    console.log(error);
+                }
+            });
+
+        });
+    </script>
 </body>
 
 

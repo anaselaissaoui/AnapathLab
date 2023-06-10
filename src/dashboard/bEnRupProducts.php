@@ -32,6 +32,14 @@ $resultTable = $contentTable->fetchAll();
 </head>
 
 <body>
+<?php 
+  // Check if the user is logged in
+  if (!isset($_SESSION['maj_name'])) {
+    // Redirect the user to the login page
+    header("Location: ../../index.html");
+    exit;
+  }
+  ?>
     <div class="modal-open">
         <div class="modal fade show" id="exampleModalCenter" tabindex="-3" role="dialog" aria-labelledby="exampleModalCenterTitle" style="display: hidden;" aria-modal="true">
         </div>
