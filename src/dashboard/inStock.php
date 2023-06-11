@@ -13,7 +13,7 @@ $inStock = $conn->prepare($queryP);
 $inStock->execute();
 $resultP = $inStock->fetchAll();
 
-$newSup="Nop";
+
 $html = '
 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
   <div class="modal-content rounded-4">
@@ -95,11 +95,12 @@ echo $html;
 <script>
      var prodCount = 1;
      var prodNCount = 0; 
+     var newSup=0;
      $(document).ready(function() {
     // Counter for product inputs
       
     $("#addMoreSupp").click(function() {
-      $newSup = "Yes";
+      newSup ++;
       var html = `<div class="rounded-3 bg-light p-4 mt-4">
                     <div class="form-group mb-3">
                       <!-- name -->
@@ -107,12 +108,12 @@ echo $html;
                       <input type="text" id="fournisseur" class="form-control" placeholder="Fournisseur" name="fournisseur">
                     </div>
                     <div class="form-group mb-3">
-                      <label for="email" class="form-label">Email: </label>
-                      <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+                      <label for="emailSup" class="form-label">Email: </label>
+                      <input type="email" id="emailSup" name="emailSup" class="form-control" placeholder="Email">
                     </div>
                     <div class="form-group mb-3">
-                      <label for="phone" class="form-label">Telephone: </label>
-                      <input type="number" id="phone" name="phone" class="form-control" placeholder="Numero de Telephone">
+                      <label for="phoneSup" class="form-label">Telephone: </label>
+                      <input type="number" id="phoneSup" name="phoneSup" class="form-control" placeholder="Numero de Telephone">
                     </div>
                   </div>`;
   
@@ -213,6 +214,7 @@ $("#additional-product-fields").append(html);
 
 
     
+  
 
     $(document).on('submit', '.inStockForm', function(e) {
   e.preventDefault();
@@ -220,6 +222,8 @@ $("#additional-product-fields").append(html);
   var formData = new FormData(this); // Create FormData object with the form data
   formData.append('prodCount', prodCount);
   formData.append('prodNCount', prodNCount);
+  formData.append('newSup', newSup);
+
 
   // Get the file input elements
   var fileInputs = document.querySelectorAll('[name^="image"]');

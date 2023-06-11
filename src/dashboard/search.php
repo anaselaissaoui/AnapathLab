@@ -22,7 +22,6 @@ if ($dispoSitua === 'Disponible') {
 // Set default filter value
 $pro_type = '';
 
-
 // Update filter value based on selected option
 if ($filter === 'Tous') {
     $pro_type = 'Tous';

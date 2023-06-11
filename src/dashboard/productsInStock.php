@@ -4,6 +4,47 @@ require '../../database/dataBase.php';
 $prodCount = $_POST['prodCount'];
 $prodNCount = $_POST['prodNCount'];
 
+
+$newSup=$_POST['newSup'];
+if ($newSup==0){
+    $supName=$_POST['fournisseur1'];
+    
+}elseif($newSup==1){
+    $supName=$_POST['fournisseur'];
+    $supEmail=$_POST['emailSup'];
+    $supPhone=$_POST['phoneSup'];
+    $insertSupQuery = "INSERT INTO supplier (sup_name, sup_email, sup_phone)
+                VALUES (:sup_name, :sup_email, :sup_phone)";
+                $insertSupStmt = $conn->prepare($insertSupQuery);
+                $insertSupStmt->bindValue(':sup_name', $supName);
+                $insertSupStmt->bindValue(':sup_email', $supEmail);
+                $insertSupStmt->bindValue(':sup_phone', $supPhone);
+                $insertSupStmt->execute();
+}
+
+
+
+
+$orderDate = date('Y-m-d H:i:s');
+
+// Insert the new order into the 'order_com' table
+$insertOrderQuery = "INSERT INTO order_com (ord_date, sup_id)
+                     VALUES (:order_date,
+                             (SELECT sup_id
+                              FROM supplier
+                              WHERE sup_name = :sup_name)
+                            )";
+
+$insertOrderStmt = $conn->prepare($insertOrderQuery);
+$insertOrderStmt->bindValue(':order_date', $orderDate);
+$insertOrderStmt->bindValue(':sup_name', $supName);
+$insertOrderStmt->execute();
+
+
+$orderId = $conn->lastInsertId();
+
+
+
 for ($i = 1; $i <= $prodCount; $i++) {
     $productName = $_POST['nameP'.$i];
     $quantity = $_POST['quantity'.$i];
@@ -15,10 +56,11 @@ for ($i = 1; $i <= $prodCount; $i++) {
     $result = $stmt->fetch();
 
     $newQuantity = $result['pro_quant'] + $quantity;
-    $updateQuery = "UPDATE product SET pro_quant = :newQuantity WHERE pro_name = :productName";
+    $updateQuery = "UPDATE product SET pro_quant = :newQuantity, ord_id = :orderId WHERE pro_name = :productName";
     $updateStmt = $conn->prepare($updateQuery);
     $updateStmt->bindValue(':newQuantity', $newQuantity);
     $updateStmt->bindValue(':productName', $productName);
+    $updateStmt->bindValue(':orderId', $orderId);
     $updateStmt->execute();
 }
 
@@ -58,8 +100,8 @@ if ($prodNCount > 0) {
                 // Example: Add the product image path to the insert/update query
                 $technicsImploded = implode(', ', $technics);
 
-                $insertQuery = "INSERT INTO product (pro_name, pro_unit, pro_quant, pro_type, pro_condition, pro_date_exp, pro_techn, pro_img, pro_availa, maj_id)
-                VALUES (:productNewName, :unit, :quantityNew, :productType, :productCondition, :expirationDate, :techniques, :image, :pro_availa, :maj_id)";
+                $insertQuery = "INSERT INTO product (pro_name, pro_unit, pro_quant, pro_type, pro_condition, pro_date_exp, pro_techn, pro_img, pro_availa, maj_id, ord_id)
+                VALUES (:productNewName, :unit, :quantityNew, :productType, :productCondition, :expirationDate, :techniques, :image, :pro_availa, :maj_id, :ord_id)";
                 $insertStmt = $conn->prepare($insertQuery);
                 $insertStmt->bindValue(':productNewName', $productNewName);
                 $insertStmt->bindValue(':unit', $unit);
@@ -71,12 +113,13 @@ if ($prodNCount > 0) {
                 $insertStmt->bindValue(':image', $targetFilePath);
                 $insertStmt->bindValue(':pro_availa', "Disponible");
                 $insertStmt->bindValue(':maj_id', "1");
+                $insertStmt->bindValue(':ord_id', $orderId);
                 $insertStmt->execute();
             } else {
                 // Handle file upload error
                 $response = array('status' => 'error', 'message' => 'Failed to upload the product image.');
                 echo json_encode($response);
-                exit;
+                // exit;
             }
         }
     }
