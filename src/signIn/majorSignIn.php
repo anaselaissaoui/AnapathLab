@@ -17,13 +17,13 @@ if (isset($_POST['submit'])) {
     } else {
         $stmt = $conn->prepare("SELECT * FROM major WHERE maj_email=:email AND maj_mdp=:password");
         $stmt->bindParam(':email', $Email);
-        $stmt->bindParam(':password', $Password);
+        $stmt->bindParam(':password', $Pass);
         $stmt->execute();
         $rowCount = $stmt->rowCount();
         if ($rowCount === 1) {
             $row = $stmt->fetch();
 
-            if ($row['maj_email'] === $Email && $Password === $row['maj_mdp']) {
+            if ($row['maj_email'] === $Email && $Pass === $row['maj_mdp']) {
                 $_SESSION['maj_name'] = $row['maj_name'];
                 $_SESSION['maj_id'] = $row['maj_id'];
                 header("Location: ../dashboard/dispoProducts.php");

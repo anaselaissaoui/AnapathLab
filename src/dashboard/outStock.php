@@ -24,11 +24,18 @@ $html = '
                 <label for="name" class="form-label">Nom de produit(s):</label>
                 <select id="name" name="name[]" class="form-control form-select">
                 <option value=""></option>';
-    foreach ($result as $row) {
-    $name = $row['pro_name'];
+
+$names = array();
+foreach ($result as $row) {
+    $names[] = $row['pro_name'];
+}
+sort($names);
+
+foreach ($names as $name) {
     $html .= "<option value=\"$name\">$name</option>";
-    }
-    $html .= '
+}
+
+$html .= '
                 </select>
             </div>
           
@@ -58,6 +65,7 @@ $html = '
 ';
 
 echo $html;
+
 ?>
 
 
@@ -66,27 +74,30 @@ echo $html;
 <script>
  $(document).ready(function() {
   $("#addMore").click(function() {
-    var html = `<div class="rounded-3 bg-light p-4 mt-4">
+  var html = `<div class="rounded-3 bg-light p-4 mt-4">
     <div class="form-group mb-3">
-                  <label for="name" class="form-label">Nom de produit(s):</label>
-                  <select name="name[]" class="form-control form-select">
-                    <option value=""></option>
-                    <?php
-                    foreach ($result as $row) {
-                      $name = $row['pro_name'];
-                      echo "<option value=\"$name\">$name</option>";
-                    }
-                    ?>
-                  </select>
-                </div>
-                <div class="form-group mb-3">
-                  <label for="quantity" class="form-label">Quantité: </label>
-                  <input type="number" name="quantity[]" class="form-control" placeholder="quantité">
-                </div>
-                </div>`;
+      <label for="name" class="form-label">Nom de produit(s):</label>
+      <select name="name[]" class="form-control form-select">
+        <option value=""></option>`;
 
-    $("#additional-fields").append(html);
+  var names = <?php echo json_encode(array_column($result, 'pro_name')); ?>;
+  names.sort();
+
+  names.forEach(function(name) {
+    html += `<option value="${name}">${name}</option>`;
   });
+
+  html += `</select>
+    </div>
+    <div class="form-group mb-3">
+      <label for="quantity" class="form-label">Quantité: </label>
+      <input type="number" name="quantity[]" class="form-control" placeholder="quantité">
+    </div>
+  </div>`;
+
+  $("#additional-fields").append(html);
+});
+
 
   $(document).on('submit', '.outStockForm', function(e) {
     e.preventDefault();

@@ -201,3 +201,56 @@ JOIN (
     GROUP BY pro_name
 ) AS bloc_totals ON products.pro_name = bloc_totals.pro_name
 SET products.pro_quantity = bloc_totals.total_quantity;
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS actions (
+    action_id INT AUTO_INCREMENT PRIMARY KEY,
+    action_type VARCHAR(50),
+    action_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT,
+    user_name VARCHAR(50),
+    table_name VARCHAR(50)
+);
+
+DELIMITER //
+CREATE TRIGGER product_actions_trigger
+AFTER INSERT, UPDATE, DELETE ON product
+FOR EACH ROW
+BEGIN
+    SET user_id = 1;
+    SET user_name = 'Bacha';
+
+    INSERT INTO actions (action_type, user_id, user_name, table_name)
+    VALUES (TRIGGER_EVENT(), user_id, user_name, 'product');
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER supplier_actions_trigger
+AFTER INSERT, UPDATE, DELETE ON supplier
+FOR EACH ROW
+BEGIN
+    SET user_id = 1;
+    SET user_name = 'Bacha';
+
+    INSERT INTO actions (action_type, user_id, user_name, table_name)
+    VALUES (TRIGGER_EVENT(), user_id, user_name, 'supplier');
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER order_com_actions_trigger
+AFTER INSERT, UPDATE, DELETE ON order_com
+FOR EACH ROW
+BEGIN
+    SET user_id = 1;
+    SET user_name = 'Bacha';
+
+    INSERT INTO actions (action_type, user_id, user_name, table_name)
+    VALUES (TRIGGER_EVENT(), user_id, user_name, 'order_com');
+END//
+DELIMITER ;

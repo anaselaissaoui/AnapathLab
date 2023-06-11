@@ -3,7 +3,7 @@
 session_start();
 require '../../database/dataBase.php';
 
-$queryMajor = "SELECT * FROM major WHERE maj_id = {$_SESSION['maj_id']}";
+$queryMajor = "SELECT * FROM chef_de_service WHERE chef_id = {$_SESSION['chef_id']}";
 
 $queryProducts = "SELECT * FROM product";
 $contentTable = $conn->prepare($queryProducts);
@@ -32,13 +32,13 @@ $resultNotifications = $contentNotifications->fetchAll();
     <link rel="shortcut icon" href="../../assets/tablogo.png" type="image/x-icon">
     <!-- <link href="./bootstrap.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="./style.css">
-    <title>Major - Produits</title>
+    <title>Chef - Produits</title>
 </head>
 
 <body>
 <?php 
   // Check if the user is logged in
-  if (!isset($_SESSION['maj_name'])) {
+  if (!isset($_SESSION['chef_name'])) {
     // Redirect the user to the login page
     header("Location: ../../index.html");
     exit;
@@ -57,25 +57,27 @@ $resultNotifications = $contentNotifications->fetchAll();
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle bg-white" src="../../assets/majorUser.png" alt="" style="width: 45px; height: 45px;">
+                        <img class="rounded-circle bg-white" src="../../assets/chefUser.png" alt="" style="width: 45px; height: 45px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0"><?php echo $_SESSION['maj_name'] ?></h6>
+                        <h6 class="mb-0"><?php echo $_SESSION['chef_name'] ?></h6>
                         <span>Major</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-
                     <div class="nav-item dropdown">
-                        <a href="./dispoProducts.php" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                        <a href="./dispoProductsChef.php" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-speedometer2 me-2"></i>Tableau De Bord</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="./dispoProducts.php" class="dropdown-item">Disponible</a>
-                            <a href="./bEnRupProducts.php" class="dropdown-item">Bientôt En Rupture</a>
-                            <a href="./enRupProducts.php" class="dropdown-item">En Rupture</a>
+                            <a href="./dispoProductsChef.php" class="dropdown-item">Disponible</a>
+                            <a href="./bEnRupProductsChef.php" class="dropdown-item">Bientôt En Rupture</a>
+                            <a href="./enRupProductsChef.php" class="dropdown-item">En Rupture</a>
                         </div>
                     </div>
-                    <a href="./products.php" class="nav-link  active nav-item"><i class="bi bi-archive-fill me-2"></i>Produits</a>
+                    <a href="./productsChef.php" class="nav-link nav-item active"><i class="bi bi-archive-fill me-2"></i>Produits</a>
+                    <a href="./suppliers.php" class="nav-link nav-item"><i class="bi bi-truck me-2"></i>Fournisseurs</a>
+                    <a href="./orders.php" class="nav-link nav-item"><i class="bi bi-file-earmark-check-fill me-2"></i></i>Commandes</a>
+                    <a href="./history.php" class="nav-link nav-item"><i class="bi bi-calendar2-week me-2"></i></i>Activités</a>
                 </div>
             </nav>
         </div>
@@ -123,8 +125,8 @@ $resultNotifications = $contentNotifications->fetchAll();
 
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2 bg-white" src="../../assets/majorUser.png" alt="" style="width: 45px; height: 45px;">
-                            <span class="d-none d-lg-inline-flex"><?php echo $_SESSION['maj_name'] ?></span>
+                            <img class="rounded-circle me-lg-2 bg-white" src="../../assets/chefUser.png" alt="" style="width: 45px; height: 45px;">
+                            <span class="d-none d-lg-inline-flex"><?php echo $_SESSION['chef_name'] ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="../signOut/signOut.php" class="dropdown-item  text-white bg-secondary">Se Déconnecter</a>
@@ -186,7 +188,7 @@ $resultNotifications = $contentNotifications->fetchAll();
                     var searchValue = $('#search').val(); // get the value of the search input
                     $.ajax({
                         type: 'POST',
-                        url: 'searchcard.php',
+                        url: 'searchCard.php',
                         data: {
                             filter: filterValue,
                             search: searchValue
@@ -204,7 +206,7 @@ $resultNotifications = $contentNotifications->fetchAll();
                         .val(); // get the value of the checked radio button
                     $.ajax({
                         type: 'POST',
-                        url: 'searchcard.php',
+                        url: 'searchCard.php',
                         data: {
                             search: search,
                             filter: filterValue // send both the search input value and checked radio button value to the PHP script

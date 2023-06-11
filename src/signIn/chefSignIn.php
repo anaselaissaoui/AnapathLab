@@ -11,25 +11,25 @@ if (isset($_POST['submit'])) {
 
     // Check if the input is in email format
     if (empty($Email) || !filter_var($Email, FILTER_VALIDATE_EMAIL)) {
-        $error = "*Your Email is required, try again.";
+        $error = "*Votre email est requis, réessayez.";
     } else if (empty($Password)) {
-        $error = "*Password is required.";
+        $error = "*Mot de passe requis.";
     } else {
         $stmt = $conn->prepare("SELECT * FROM chef_de_service WHERE chef_email=:email AND chef_mdp=:password");
         $stmt->bindParam(':email', $Email);
-        $stmt->bindParam(':password', $Password);
+        $stmt->bindParam(':password', $Pass);
         $stmt->execute();
         $rowCount = $stmt->rowCount();
         if ($rowCount === 1) {
             $row = $stmt->fetch();
 
-            if ($row['chef_email'] === $Email && $Password === $row['chef_mdp']) {
+            if ($row['chef_email'] === $Email && $Pass === $row['chef_mdp']) {
                 $_SESSION['chef_name'] = $row['chef_name'];
                 $_SESSION['chef_id'] = $row['chef_id'];
-                header("Location: ../dashboard/majorDashboard.php");
+                header("Location: ../dashboard/dispoProductsChef.php");
             }
         } else {
-            $error = "*The Email or the Password is incorrect, try again.";
+            $error = "*Email ou le mot de passe est incorrect, réessayez.";
         }
     }
 }
