@@ -35,14 +35,14 @@ $html = '
             <!-- quantity -->
             <div class="form-group mb-3">
                 <label for="quantity" class="form-label">Quantité: </label>
-                <input type="number" id="quantity" name="quantity[]" class="form-control" placeholder="quantity">
+                <input type="number" id="quantity" name="quantity[]" class="form-control" placeholder="quantité">
             </div>
           </div>
           
           <div id="additional-fields"></div>
           
           <div class="form-group my-3">
-            <a id="addMore" class="btn btn-outline-info">+ Autre</a>
+            <a id="addMore" class="btn btn-outline-info">+Autre</a>
           </div>
           
           <div class="form-group d-flex justify-content-around">
@@ -81,7 +81,7 @@ echo $html;
                 </div>
                 <div class="form-group mb-3">
                   <label for="quantity" class="form-label">Quantité: </label>
-                  <input type="number" name="quantity[]" class="form-control" placeholder="quantity">
+                  <input type="number" name="quantity[]" class="form-control" placeholder="quantité">
                 </div>
                 </div>`;
 
@@ -91,22 +91,17 @@ echo $html;
   $(document).on('submit', '.outStockForm', function(e) {
     e.preventDefault();
 
-    // Get the form data
     var formData = $(this).serialize();
 
-    // Make an AJAX request to confirmOutStock.php
     $.ajax({
       url: './confirmOutStock.php',
       type: 'POST',
       data: formData,
       success: function(response) {
-        // Handle the success response if needed
         console.log(response);
-        window.location.href = "./dispoProducts.php"; // Redirect to majorDashboard.php
-        
+        window.location.href = "./dispoProducts.php"; 
       },
       error: function(xhr, status, error) {
-        // Handle error if the AJAX request fails
         console.log(error);
       }
     });

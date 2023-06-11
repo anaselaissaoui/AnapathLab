@@ -20,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':pro_condition', $condition);
         $stmt->bindParam(':pro_techn', $technics);
         $stmt->execute();
-
-        // No need for header("location: ./majorDashboard.php");
-        // The success function in the AJAX request will handle the redirection
         exit();
     }
 } elseif (isset($_POST['Cancel'])) {

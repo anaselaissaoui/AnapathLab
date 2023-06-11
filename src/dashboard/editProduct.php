@@ -29,7 +29,7 @@ $resultEdit = $editProd ->fetchAll();
           <div class="content-text p-4 px-5 align-item-stretch">
           <form method="POST" class="edit-form" enctype="multipart/form-data">
           <div class=" text-center mb-5">
-              <h2 class="heading-section">Edit Product</h2>
+              <h2 class="heading-section">Modifier Le Produit</h2>
           </div>
           <!-- name -->
           <div class="form-group">
@@ -45,7 +45,7 @@ $resultEdit = $editProd ->fetchAll();
           <div class="form-group">
           <label for="condition" class="form-label">Condition de Conservation:</label>
               <select id="condition" name="condition" class="form-control form-select  py-3">
-                  <option value="'. $Condition.'">Current Condition : '. $Condition.' </option>
+                  <option value="'. $Condition.'">Condition Actuelle: '. $Condition.' </option>
                   <option value="+15 à +25°C">+15 à +25°C</option>
                   <option value="+4°C">+4°C</option>
               </select>
@@ -55,15 +55,15 @@ $resultEdit = $editProd ->fetchAll();
           <div class="form-group">
           <label for="technics" class="form-label">Techniques:</label>
               <select id="technics" name="technics" class="form-control form-select py-3">
-                  <option value="'. $Technics.'">Current Techniques : '. $Technics.' </option>
+                  <option value="'. $Technics.'">Techniques Actuelles: '. $Technics.' </option>
                   <option value="tech1">tech1</option>
                   <option value="tech2">tech2</option>
               </select>
           </div>
           
           <div class="form-group d-flex justify-content-around">
-          <button name="Cancel" style="background-color:#56c4cf; color:white;" class="form-control btn w-25">Cancel</button>
-              <button name="submit" id="'.$pro_id.'" class="form-control btn editBtn btn-primary confirm w-25 ">Edit Product</button>
+          <button name="Cancel" style="background-color:#56c4cf; color:white;" class="form-control btn w-25">Annuler</button>
+              <button name="submit" id="'.$pro_id.'" class="form-control btn editBtn btn-primary confirm w-25 ">Modifer Le Product</button>
           </div>
           
       </form>

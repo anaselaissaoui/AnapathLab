@@ -23,7 +23,7 @@ $html = '
         <div class="d-flex row justify-content-center align-items-center">
         <div class="col-6">
         <img src="'.$row['pro_img'].'" width="100%" alt="'.$row['pro_name'].'">
-        <h5 class="text-center">'.$row['pro_date_exp'].'</h5>
+        <h5 class="text-center fw-semibold text-danger">'.$row['pro_date_exp'].'</h5>
         </div>
           <div class=" content-text col-6">
             <div class="text-left">
@@ -32,9 +32,9 @@ $html = '
             <p class=" fw-semibold me-1">'.$row['pro_type'].',</p>
             <p class=" fw-normal">'.$row['pro_unit'].'</p>
             </div>
-            <p class="fw-bold">Techniques : '.$row['pro_techn'].'</p>
-              <p class="fw-bold">Condition de Conservation : '.$row['pro_condition'].'</p>
-              <p class="fw-bold">Fournisseur : '.$row['sup_name'].'</p>
+            <p class="fw-bold">Techniques : <span class="text-primary">'.$row['pro_techn'].'</span></p>
+              <p class="fw-bold">Condition de Conservation : <span class="text-primary">'.$row['pro_condition'].'</span></p>
+              <p class="fw-bold">Fournisseur : <span class="text-primary">'.$row['sup_name'].'</span></p>
             </div>
           </div>
           </div>

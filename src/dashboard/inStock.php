@@ -63,7 +63,7 @@ $html = '
             </div>
             <div class="form-group mb-3">
                   <label for="quantity1" class="form-label">Quantité: </label>
-                  <input type="number" id="quantity1" name="quantity1" class="form-control" placeholder="quantity">
+                  <input type="number" id="quantity1" name="quantity1" class="form-control" placeholder="quantité">
                 </div>
           </div>
           
@@ -97,8 +97,6 @@ echo $html;
      var prodNCount = 0; 
      var newSup=0;
      $(document).ready(function() {
-    // Counter for product inputs
-      
     $("#addMoreSupp").click(function() {
       newSup ++;
       var html = `<div class="rounded-3 bg-light p-4 mt-4">
@@ -124,7 +122,6 @@ echo $html;
          
     $("#addMoreProd").click(function() {
         prodCount++; // Increment the counter
-    
         var html = `<div class="rounded-3 bg-light p-4 mt-4">
                     <div class="form-group mb-3">
                         <label for="nameP${prodCount}" class="form-label">Product ${prodCount}:</label>
@@ -139,8 +136,8 @@ echo $html;
                     </select>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="quantity${prodCount}" class="form-label">Quantity: </label>
-                        <input type="number" id="quantity${prodCount}" name="quantity${prodCount}" class="form-control" placeholder="Quantity">
+                        <label for="quantity${prodCount}" class="form-label">Quantité: </label>
+                        <input type="number" id="quantity${prodCount}" name="quantity${prodCount}" class="form-control" placeholder="Quantité">
                     </div>
                     </div>`;
                     console.log(prodCount);
@@ -152,50 +149,49 @@ $("#additional-product-fields").append(html);
     
       $("#addNewProduct").click(function() {
         prodNCount++; // Increment the counter
-    
         var html = `<div class="rounded-3 bg-light p-4 mt-4">
                       <div class="form-group mb-3">
-                        <label for="nameNP${prodNCount}" class="form-label">Product Name (${prodNCount}):</label>
-                        <input type="text" name="nameNP${prodNCount}" id="nameNP${prodNCount}" class="form-control" placeholder="Product Name">
+                        <label for="nameNP${prodNCount}" class="form-label">Nom De Produit (${prodNCount}):</label>
+                        <input type="text" name="nameNP${prodNCount}" id="nameNP${prodNCount}" class="form-control" placeholder="Nom De Produit">
                       </div>
                       <div class="form-group mb-3">
-                        <label for="unit${prodNCount}" class="form-label">Unit (${prodNCount}): </label>
-                        <input type="text" name="unit${prodNCount}" id="unit${prodNCount}" class="form-control" placeholder="Unit">
+                        <label for="unit${prodNCount}" class="form-label">Unité (${prodNCount}): </label>
+                        <input type="text" name="unit${prodNCount}" id="unit${prodNCount}" class="form-control" placeholder="Unité">
                       </div>
                       <div class="form-group mb-3">
-                        <label for="quantityNP${prodNCount}" class="form-label">Quantity (${prodNCount}): </label>
-                        <input type="number" name="quantityNP${prodNCount}" id="quantityNP${prodNCount}" class="form-control" placeholder="Quantity">
+                        <label for="quantityNP${prodNCount}" class="form-label">Quantité (${prodNCount}): </label>
+                        <input type="number" name="quantityNP${prodNCount}" id="quantityNP${prodNCount}" class="form-control" placeholder="Quantité">
                       </div>
                       <div class="form-group">
-                        <label for="type${prodNCount}" class="form-label">Type (${prodNCount}):</label>
-                        <select id="type${prodNCount}" name="type${prodNCount}" class="form-control form-select py-3" placeholder="Product Type">
+                        <label for="type${prodNCount}" class="form-label">Type De Produit (${prodNCount}):</label>
+                        <select id="type${prodNCount}" name="type${prodNCount}" class="form-control form-select py-3" placeholder="Type De Produit">
                           <option value="Chimique">Chimique</option>
                           <option value="Fongible">Fongible</option>
                           <option value="Immuno">Immuno</option>
                         </select>
                       </div>
                       <div class="form-group">
-                        <label for="condition${prodNCount}" class="form-label">Conservation Condition (${prodNCount}):</label>
-                        <select id="condition${prodNCount}" name="condition${prodNCount}" class="form-control form-select py-3" placeholder="Conservation Condition">
+                        <label for="condition${prodNCount}" class="form-label">Condition de Conservation (${prodNCount}):</label>
+                        <select id="condition${prodNCount}" name="condition${prodNCount}" class="form-control form-select py-3" placeholder="Condition de Conservation">
                           <option value="+15 à +25°C">+15 à +25°C</option>
                           <option value="+4°C">+4°C</option>
                         </select>
                       </div>
                       <div class="form-group mb-3">
-                        <label for="dateExp${prodNCount}" class="form-label">Expiration Date (${prodNCount}): </label>
-                        <input type="date" id="dateExp${prodNCount}" name="dateExp${prodNCount}" class="form-control" placeholder="Expiration Date">
+                        <label for="dateExp${prodNCount}" class="form-label">Date d'Expiration (${prodNCount}): </label>
+                        <input type="date" id="dateExp${prodNCount}" name="dateExp${prodNCount}" class="form-control" placeholder="Date d'Expiration">
                       </div>
                       <div class="form-group">
   <label for="technics${prodNCount}" class="form-label">Techniques (${prodNCount}):</label>
   <div class="checkbox-group" id="technics${prodNCount}">
     <ul class="checkbox-list list-unstyled">
-      <li><label><input type="checkbox" name="technics${prodNCount}[]" value="Macro">Macro</label></li>
-      <li><label><input type="checkbox" name="technics${prodNCount}[]" value="Microto">Microto</label></li>
-      <li><label><input type="checkbox" name="technics${prodNCount}[]" value="Coloration HE">Coloration HE</label></li>
-      <li><label><input type="checkbox" name="technics${prodNCount}[]" value="Coloration SP">Coloration SP</label></li>
-      <li><label><input type="checkbox" name="technics${prodNCount}[]" value="Immuno">Immuno</label></li>
-      <li><label><input type="checkbox" name="technics${prodNCount}[]" value="En Robage">En Robage</label></li>
-      <li><label><input type="checkbox" name="technics${prodNCount}[]" value="Imuuno FL">Imuuno FL</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Macro">Macro</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Microto">Microto</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Coloration HE">Coloration HE</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Coloration SP">Coloration SP</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Immuno">Immuno</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="En Robage">En Robage</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Imuuno FL">Imuuno FL</label></li>
     </ul>
   </div>
 </div>
@@ -203,7 +199,7 @@ $("#additional-product-fields").append(html);
 
                       <div class="form-group mb-3">
                         <label for="image${prodNCount}" class="form-label">Image (${prodNCount}): </label>
-                        <input type="file" name="image[]" id="image${prodNCount}" class="form-control input-group-text" placeholder="Product Image">
+                        <input type="file" name="image[]" id="image${prodNCount}" class="form-control input-group-text" placeholder="Image de Produit">
 
                       </div>
                     </div>`;
@@ -219,13 +215,10 @@ $("#additional-product-fields").append(html);
     $(document).on('submit', '.inStockForm', function(e) {
   e.preventDefault();
 
-  var formData = new FormData(this); // Create FormData object with the form data
+  var formData = new FormData(this); 
   formData.append('prodCount', prodCount);
   formData.append('prodNCount', prodNCount);
   formData.append('newSup', newSup);
-
-
-  // Get the file input elements
   var fileInputs = document.querySelectorAll('[name^="image"]');
   fileInputs.forEach(function(fileInput) {
     var files = fileInput.files;
@@ -234,7 +227,6 @@ $("#additional-product-fields").append(html);
     }
   });
 
-  // Make an AJAX request to productsInStock.php
   $.ajax({
     url: 'productsInStock.php',
     type: 'POST',
@@ -242,12 +234,10 @@ $("#additional-product-fields").append(html);
     processData: false,
     contentType: false,
     success: function(response) {
-      // Handle the success response if needed
       console.log(response);
       window.location.href = "./dispoProducts.php";
     },
     error: function(xhr, status, error) {
-      // Handle error if the AJAX request fails
       console.log(error);
     }
   });

@@ -9,6 +9,10 @@ $queryProducts = "SELECT * FROM product";
 $contentTable = $conn->prepare($queryProducts);
 $contentTable->execute();
 $resultTable = $contentTable->fetchAll();
+$queryNotifications = "SELECT * FROM notifications";
+$contentNotifications = $conn->prepare($queryNotifications);
+$contentNotifications->execute();
+$resultNotifications = $contentNotifications->fetchAll();
 
 ?>
 <!DOCTYPE html>
@@ -28,7 +32,7 @@ $resultTable = $contentTable->fetchAll();
     <link rel="shortcut icon" href="../../assets/tablogo.png" type="image/x-icon">
     <!-- <link href="./bootstrap.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="./style.css">
-    <title>Major-Dashboard</title>
+    <title>Major - Produits</title>
 </head>
 
 <body>
@@ -91,35 +95,39 @@ $resultTable = $contentTable->fetchAll();
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <?php $notificationCount = count($resultNotifications); ?>
+                            <?php if ($notificationCount > 0) : ?>
+                                <span class="position-absolute top-25 start-0 badge rounded-pill bg-danger"><?php echo $notificationCount; ?></span>
+                            <?php endif; ?>
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                            <span class="d-none d-lg-inline-flex">Notification</span>
                         </a>
-                        <div class="dropdown-menu  text-white bg-secondary dropdown-menu-end  border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item text-white ">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white">
-                                <h6 class="fw-normal mb-0">New user added</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white">
-                                <h6 class="fw-normal mb-0">Password changed</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white text-center">See all notifications</a>
+                        <div class="dropdown-menu border border-left-0 border-right-0 border-bottom-0 rounded-0 rounded-bottom bg-secondary-emphasis dropdown-menu-end m-0">
+                            <?php $reversedNotifications = array_reverse($resultNotifications); ?>
+                            <?php $limitedNotifications = array_slice($reversedNotifications, 0, 8); ?>
+                            <?php foreach ($limitedNotifications as $notification) : ?>
+                                <a href="#" class="dropdown-item text-white d-flex justify-content-between align-items-center">
+                                    <?php $statusClass = ($notification['new_status'] == 'Bientôt En Rupture') ? 'text-warning' : 'text-danger'; ?>
+                                    <h6 style="font-size: 12px;" class="fw-bold mb-0 me-2 <?php echo $statusClass; ?>">
+                                        <?php echo $notification['product_name']; ?> is <?php echo $notification['new_status']; ?>
+                                    </h6>
+                                    <small style="font-size: 8px;" class="fw-bold <?php echo $statusClass; ?>"><?php echo $notification['created_at']; ?></small>
+                                </a>
+                                <hr class="dropdown-divider">
+                            <?php endforeach; ?>
+                            <?php if ($notificationCount > 8) : ?>
+                            <?php endif; ?>
+                            <a href="#" class="dropdown-item text-center">Toutes Les Notifications</a>
                         </div>
                     </div>
+
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2 bg-white" src="../../assets/majorUser.png" alt="" style="width: 45px; height: 45px;">
                             <span class="d-none d-lg-inline-flex"><?php echo $_SESSION['maj_name'] ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="../signOut/signOut.php" class="dropdown-item  text-white bg-secondary">Log Out</a>
+                            <a href="../signOut/signOut.php" class="dropdown-item  text-white bg-secondary">Se Déconnecter</a>
                         </div>
                     </div>
                 </div>
@@ -243,6 +251,7 @@ $resultTable = $contentTable->fetchAll();
         display: flex;
         flex-direction: column;
         width: 95%;
+        margin-inline: auto;
         padding: 0.4rem;
     }
 
@@ -308,4 +317,9 @@ $resultTable = $contentTable->fetchAll();
         top: -100%;
         left: 200%;
     }
+
+    .btn-outline-primary{
+    font-size:0.8rem;
+    font-weight: 600;
+}
 </style>

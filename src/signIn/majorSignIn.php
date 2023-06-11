@@ -64,7 +64,7 @@ if (isset($_POST['submit'])) {
 
                     <div class="col-lg-9 p-4 signinCard">
                         <div class="wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                            <h2 class="mb-5 text-white text-center text-uppercase" id="signIn">Hello M.Bacha</h2>
+                            <h2 class="mb-5 text-white text-center text-uppercase" id="signIn">Bonjour Mme.Bacha</h2>
                             <form action="" method="POST" class="loginForm">
                                 <div class="row g-3">
                                     <div class="col-md-12">
@@ -75,13 +75,13 @@ if (isset($_POST['submit'])) {
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-floating">
-                                            <input type="password" class="form-control" name="password" placeholder="Password">
-                                            <label for="password">Password</label>
+                                            <input type="password" class="form-control" name="password" placeholder="Mot De Passe">
+                                            <label for="password">Mot De Passe</label>
                                         </div>
                                     </div>
 
                                     <div class="col-12 text-center">
-                                        <button class="btn fs-4 fw-bold w-75 py-3" name="submit" type="submit">Sign In</button>
+                                        <button class="btn fs-4 fw-bold w-75 py-3" name="submit" type="submit">S'identifier</button>
                                         <div class="error text-danger text-center"><?php echo $error; ?></div>
 
                                     </div>

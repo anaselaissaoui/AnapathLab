@@ -9,6 +9,10 @@ $queryProducts = "SELECT * FROM product WHERE pro_availa='Bientôt En Rupture'";
 $contentTable = $conn->prepare($queryProducts);
 $contentTable->execute();
 $resultTable = $contentTable->fetchAll();
+$queryNotifications = "SELECT * FROM notifications";
+$contentNotifications = $conn->prepare($queryNotifications);
+$contentNotifications->execute();
+$resultNotifications = $contentNotifications->fetchAll();
 
 ?>
 <!DOCTYPE html>
@@ -28,7 +32,7 @@ $resultTable = $contentTable->fetchAll();
     <link rel="shortcut icon" href="../../assets/tablogo.png" type="image/x-icon">
     <!-- <link href="./bootstrap.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="./style.css">
-    <title>Major-Dashboard</title>
+    <title>Major - Produits Bientôt En Rupture</title>
 </head>
 
 <body>
@@ -63,7 +67,7 @@ $resultTable = $contentTable->fetchAll();
                 </div>
                 <div class="navbar-nav w-100">
                 <div class="nav-item dropdown">
-                        <a href="./dispoProducts.php" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+                        <a href="./dispoProducts.php" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="bi bi-speedometer2 me-2"></i>Tableau De Bord</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="./dispoProducts.php" class="dropdown-item">Disponible</a>
                             <a href="./bEnRupProducts.php" class="dropdown-item active">Bientôt En Rupture</a>
@@ -90,46 +94,50 @@ $resultTable = $contentTable->fetchAll();
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <?php $notificationCount = count($resultNotifications); ?>
+                            <?php if ($notificationCount > 0) : ?>
+                                <span class="position-absolute top-25 start-0 badge rounded-pill bg-danger"><?php echo $notificationCount; ?></span>
+                            <?php endif; ?>
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                            <span class="d-none d-lg-inline-flex">Notification</span>
                         </a>
-                        <div class="dropdown-menu  text-white bg-secondary dropdown-menu-end  border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item text-white ">
-                                <h6 class="fw-normal mb-0">Profile updated</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white">
-                                <h6 class="fw-normal mb-0">New user added</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white">
-                                <h6 class="fw-normal mb-0">Password changed</h6>
-                                <small>15 minutes ago</small>
-                            </a>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item text-white text-center">See all notifications</a>
+                        <div class="dropdown-menu border border-left-0 border-right-0 border-bottom-0 rounded-0 rounded-bottom bg-secondary-emphasis dropdown-menu-end m-0">
+                            <?php $reversedNotifications = array_reverse($resultNotifications); ?>
+                            <?php $limitedNotifications = array_slice($reversedNotifications, 0, 8); ?>
+                            <?php foreach ($limitedNotifications as $notification) : ?>
+                                <a href="#" class="dropdown-item text-white d-flex justify-content-between align-items-center">
+                                    <?php $statusClass = ($notification['new_status'] == 'Bientôt En Rupture') ? 'text-warning' : 'text-danger'; ?>
+                                    <h6 style="font-size: 12px;" class="fw-bold mb-0 me-2 <?php echo $statusClass; ?>">
+                                        <?php echo $notification['product_name']; ?> is <?php echo $notification['new_status']; ?>
+                                    </h6>
+                                    <small style="font-size: 8px;" class="fw-bold <?php echo $statusClass; ?>"><?php echo $notification['created_at']; ?></small>
+                                </a>
+                                <hr class="dropdown-divider">
+                            <?php endforeach; ?>
+                            <?php if ($notificationCount > 8) : ?>
+                            <?php endif; ?>
+                            <a href="#" class="dropdown-item text-center">Toutes Les Notifications</a>
                         </div>
                     </div>
+
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2 bg-white" src="../../assets/majorUser.png" alt="" style="width: 45px; height: 45px;">
                             <span class="d-none d-lg-inline-flex"><?php echo $_SESSION['maj_name'] ?></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="../signOut/signOut.php" class="dropdown-item  text-white bg-secondary">Log Out</a>
+                            <a href="../signOut/signOut.php" class="dropdown-item  text-white bg-secondary">Se Déconnecter</a>
                         </div>
                     </div>
                 </div>
             </nav>
             <!-- Navbar End -->
 
-            <!-- Recent Sales Start -->
+              <!--  Tableau des Produits Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light  rounded p-4">
                     <div class="d-block align-items-center justify-content-between mb-4">
-                        <h4 class="me-2">Products Bientôt En Rupture</h4>
+                        <h4 class="me-2">Produits Bientôt En Rupture</h4>
                         <div class="d-xxl-flex align-items-center justify-content-between mb-4 d-lg-inline justify-content-start d-sm-flex">
                             <form class="d-md-flex mw-100 pe-5">
                                 <input class="form-control border-0" id="search" type="search" placeholder="Search">
@@ -158,7 +166,7 @@ $resultTable = $contentTable->fetchAll();
                             <thead>
                                 <tr class="text-dark text-center" style="vertical-align: middle;">
                                     <th scope="col">Produit</th>
-                                    <th scope="col">Quantite</th>
+                                    <th scope="col">Quantité</th>
                                     <th scope="col" style="width: 120px;">Date</th>
                                     <th scope="col">Type</th>
                                     <th scope="col">Condition de conservation</th>
@@ -172,7 +180,7 @@ $resultTable = $contentTable->fetchAll();
                     </div>
                 </div>
             </div>
-            <!-- Recent Sales End -->
+             <!--  Tableau des Produits End -->
 
 
             <!-- Content End -->
@@ -187,8 +195,8 @@ $resultTable = $contentTable->fetchAll();
         <script>
             $(document).ready(function() {
                 $('input[type=radio][name=btnradio]').change(function() {
-                    var filterValue = $(this).val(); // get the value of the selected radio button
-                    var searchValue = $('#search').val(); // get the value of the search input
+                    var filterValue = $(this).val(); 
+                    var searchValue = $('#search').val(); 
                     var disSituation = "Bientôt En Rupture";
                     $.ajax({
                         type: 'POST',
@@ -197,9 +205,8 @@ $resultTable = $contentTable->fetchAll();
                             filter: filterValue,
                             search: searchValue,
                             dispoSituation:disSituation
-                        }, // send both the selected radio button value and search input value to the PHP script
+                        }, 
                         success: function(response) {
-                            // display the filtered results returned from the PHP script
                             $('#tableResult').html(response);
                         }
                     });
@@ -207,8 +214,7 @@ $resultTable = $contentTable->fetchAll();
 
                 $('#search').keyup(function() {
                     var search = $(this).val();
-                    var filterValue = $('input[type=radio][name=btnradio]:checked')
-                        .val(); // get the value of the checked radio button
+                    var filterValue = $('input[type=radio][name=btnradio]:checked').val(); 
                         var disSituation = "Bientôt En Rupture";
                     $.ajax({
                         type: 'POST',
@@ -216,7 +222,7 @@ $resultTable = $contentTable->fetchAll();
                         data: {
                             search: search,
                             dispoSituation:disSituation,
-                            filter: filterValue // send both the search input value and checked radio button value to the PHP script
+                            filter: filterValue 
                         },
                         success: function(response) {
                             $('#tableResult').html(response);
@@ -227,7 +233,7 @@ $resultTable = $contentTable->fetchAll();
 
 
                 $('a[data-pro-id]').click(function(event) {
-                    event.preventDefault(); // Prevent the default behavior of the <a> element
+                    event.preventDefault(); 
 
                     var proId = $(this).data('pro-id');
 
@@ -252,24 +258,18 @@ $resultTable = $contentTable->fetchAll();
 
             $(document).on('click', '.edit-button', function(e) {
                     e.preventDefault();
-
-                    // Get the pro_id from the button
                     var proId = $(this).attr('id');
 
-                    // Make an AJAX request to retrieve the modal content from editProduct.php
+                    
                     $.ajax({
                     url: './editProduct.php',
                     type: 'GET',
                     data: { id: proId },
                     success: function(response) {
-                        // Display the modal content in the placeholder element
                         $('#exampleModalCenter').html(response);
-
-                        // Show the modal
                         $('#exampleModalCenter').modal('show');
                     },
                     error: function(xhr, status, error) {
-                        // Handle error if the AJAX request fails
                         console.log(error);
                     }
                     });
@@ -277,17 +277,12 @@ $resultTable = $contentTable->fetchAll();
 
                 $(document).on('click', '.editBtn', function(e) {
     e.preventDefault();
-
-    // Get the pro_id from the button
     var proId = $(this).attr('id');
-
-    // Get the form values
     var name = $('#name').val();
     var unit = $('#unit').val();
     var condition = $('#condition').val();
     var technics = $('#technics').val();
 
-    // Make an AJAX request to confirmEdit.php
     $.ajax({
         url: './confirmEdit.php',
         type: 'POST',
@@ -299,13 +294,10 @@ $resultTable = $contentTable->fetchAll();
             technics: technics
         },
         success: function(response) {
-            // Handle the success response if needed
             console.log(response);
-            // Reload or update the table if required
-            window.location.href = "./majorDashboard.php"; // Redirect to majorDashboard.php
+            window.location.href = "./majorDashboard.php";
         },
         error: function(xhr, status, error) {
-            // Handle error if the AJAX request fails
             console.log(error);
         }
     });
@@ -330,6 +322,10 @@ $resultTable = $contentTable->fetchAll();
 
 td{
     font-weight: 500;
+}
+.btn-outline-primary{
+    font-size:0.8rem;
+    font-weight: 600;
 }
 
 </style>
