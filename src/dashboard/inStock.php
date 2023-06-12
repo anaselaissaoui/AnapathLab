@@ -41,7 +41,7 @@ $html = '
             <div id="additional-supplier-fields"></div>
             
             <div class="form-group my-3">
-              <button type="button" id="addMoreSupp" class="btn btn btn-outline-info">New Supplier</button>
+              <button type="button" id="addMoreSupp" class="btn btn btn-outline-info">Nouveau Fournisseur</button>
             </div>
           </div>
 
@@ -69,8 +69,8 @@ $html = '
           
           <div id="additional-product-fields"></div>
           
-          <div class="form-group my-3 d-flex justify-content-around">
-            <button type="button" id="addMoreProd" class="btn btn btn-outline-info"> + Autre </button>
+          <div class="form-group my-3  ms-4 d-flex">
+            <button type="button" id="addMoreProd" class="btn btn btn-outline-info me-3"><i class="bi bi-node-plus-fill me-1"></i>Autre</button>
             <button type="button" id="addNewProduct" class="btn btn btn-outline-info">Nouveau Produit</button>
           </div>
           
@@ -185,13 +185,13 @@ $("#additional-product-fields").append(html);
   <label for="technics${prodNCount}" class="form-label">Techniques (${prodNCount}):</label>
   <div class="checkbox-group" id="technics${prodNCount}">
     <ul class="checkbox-list list-unstyled">
-      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Macro">Macro</label></li>
-      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Microto">Microto</label></li>
-      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Coloration HE">Coloration HE</label></li>
-      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Coloration SP">Coloration SP</label></li>
-      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Immuno">Immuno</label></li>
-      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="En Robage">En Robage</label></li>
-      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Imuuno FL">Imuuno FL</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Macroscopie">Macroscopie</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Microtomie">Microtomie</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Colorations HE">Colorations HE</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Colorations spéciales">Colorations spéciales</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Immunohistochimie">Immunohistochimie</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Enrobage">Enrobage</label></li>
+      <li><label><input type="checkbox" class="me-2" name="technics${prodNCount}[]" value="Immunofluorescence">Immunofluorescence</label></li>
     </ul>
   </div>
 </div>
@@ -245,3 +245,9 @@ $("#additional-product-fields").append(html);
 
 
 </script>
+<style>
+  
+.btn-outline-info:hover{
+    color:white;
+}
+</style>

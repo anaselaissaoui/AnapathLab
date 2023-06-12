@@ -329,32 +329,35 @@ $resultNotifications = $contentNotifications->fetchAll();
 
 
             $(document).on('click', '.editBtn', function(e) {
-                e.preventDefault();
-                var proId = $(this).attr('id');
-                var name = $('#name').val();
-                var unit = $('#unit').val();
-                var condition = $('#condition').val();
-                var technics = $('#technics').val();
-                $.ajax({
-                    url: './confirmEdit.php',
-                    type: 'POST',
-                    data: {
-                        pro_id: proId,
-                        name: name,
-                        unit: unit,
-                        condition: condition,
-                        technics: technics
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        window.location.href = "./dispoProducts.php";
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(error);
-                    }
-                });
+    e.preventDefault();
+    var proId = $(this).attr('id');
+    var name = $('#name').val();
+    var unit = $('#unit').val();
+    var condition = $('#condition').val();
+    var technics = [];
+    $('input[name="technics[]"]:checked').each(function() {
+        technics.push($(this).val());
+    });
 
-            });
+    $.ajax({
+        url: 'confirmEdit.php',
+        type: 'POST',
+        data: {
+            pro_id: proId,
+            name: name,
+            unit: unit,
+            condition: condition,
+            technics: technics.join(', ') // Convert the array to a comma-separated string
+        },
+        success: function(response) {
+            console.log(response);
+            window.location.href = "./dispoProducts.php";
+        },
+        error: function(xhr, status, error) {
+            console.log(error);
+        }
+    });
+});
         </script>
 </body>
 

@@ -295,7 +295,7 @@ $resultNotifications = $contentNotifications->fetchAll();
         },
         success: function(response) {
             console.log(response);
-            window.location.href = "./majorDashboard.php";
+            window.location.href = "./dispoProducts.php";
         },
         error: function(xhr, status, error) {
             console.log(error);

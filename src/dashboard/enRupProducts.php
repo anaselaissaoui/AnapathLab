@@ -273,34 +273,43 @@ $resultNotifications = $contentNotifications->fetchAll();
                     }
                     });
                 });
-
                 $(document).on('click', '.editBtn', function(e) {
     e.preventDefault();
     var proId = $(this).attr('id');
     var name = $('#name').val();
     var unit = $('#unit').val();
     var condition = $('#condition').val();
-    var technics = $('#technics').val();
+    var technics = [];
+    $('input[name="technics[]"]:checked').each(function() {
+        technics.push($(this).val());
+    });
+
+    console.log(technics);
+
 
     $.ajax({
-        url: './confirmEdit.php',
+        url: 'confirmEdit.php',
         type: 'POST',
         data: {
             pro_id: proId,
             name: name,
             unit: unit,
             condition: condition,
-            technics: technics
+            technics: technics.join(', ') // Convert the array to a comma-separated string
         },
         success: function(response) {
             console.log(response);
-            window.location.href = "./majorDashboard.php"; 
+            window.location.href = "./dispoProducts.php";
         },
         error: function(xhr, status, error) {
             console.log(error);
+            window.location.href = "./dispoProducts.php";
         }
     });
 });
+
+
+
 
         </script>
 </body>

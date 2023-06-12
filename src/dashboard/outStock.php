@@ -53,8 +53,8 @@ $html .= '
           </div>
           
           <div class="form-group d-flex justify-content-around">
-            <button name="cancel" style="background-color:#56c4cf; color:white;" class="form-control btn w-25">Cancel</button>
-            <button type="submit" name="submit" class="form-control btn btn-primary confirmOutStock w-25">Submit</button>
+            <button name="cancel" style="background-color:#56c4cf; color:white;" class="form-control btn w-25">Annuler</button>
+            <button type="submit" name="submit" class="form-control btn btn-primary confirmOutStock w-25">Confirmer</button>
           </div>
           
         </form>
