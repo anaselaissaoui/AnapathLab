@@ -68,9 +68,9 @@ $resultNotifications = $contentNotifications->fetchAll();
                     <div class="nav-item dropdown">
                         <a href="./dispoProductsChef.php" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="bi bi-speedometer2 me-2"></i>Tableau De Bord</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="./dispoProductsChef.php" class="dropdown-item active">Disponible</a>
+                            <a href="./dispoProductsChef.php" class="dropdown-item">Disponible</a>
                             <a href="./bEnRupProductsChef.php" class="dropdown-item">Bientôt En Rupture</a>
-                            <a href="./enRupProductsChef.php" class="dropdown-item">En Rupture</a>
+                            <a href="./enRupProductsChef.php" class="dropdown-item active">En Rupture</a>
                         </div>
                     </div>
                     <a href="./productsChef.php" class="nav-link nav-item"><i class="bi bi-archive-fill me-2"></i>Produits</a>

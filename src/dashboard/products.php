@@ -258,7 +258,6 @@ $resultNotifications = $contentNotifications->fetchAll();
     .cardProduct .main .productImage {
         border-radius: 0.5rem;
         max-width: 100%;
-        height: 250px;
         object-fit: cover;
     }
 
