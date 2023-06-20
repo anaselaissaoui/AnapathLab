@@ -31,7 +31,7 @@ $resultNotifications = $contentNotifications->fetchAll();
     <link rel="shortcut icon" href="../../assets/tablogo.png" type="image/x-icon">
     <!-- <link href="./bootstrap.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="./style.css">
-    <title>Major - Tableau De Bord</title>
+    <title>Chef - Produits Bientôt En Rupture</title>
 </head>
 
 <body>

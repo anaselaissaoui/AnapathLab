@@ -32,7 +32,7 @@ $resultNotifications = $contentNotifications->fetchAll();
     <link rel="shortcut icon" href="../../assets/tablogo.png" type="image/x-icon">
     <!-- <link href="./bootstrap.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="./style.css">
-    <title>Chef - Produits</title>
+    <title>Chef - Fournisseurs</title>
 </head>
 
 <body>
