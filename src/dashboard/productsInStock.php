@@ -81,7 +81,7 @@ if ($prodNCount > 0) {
         // Check if a file was uploaded
         if (!empty($productImage)) {
             // Process the uploaded file
-            $uploadDirectory = '../../assets/';
+            $uploadDirectory = '../../assets/pro_Pictures/';
             $uploadedFileName = basename($productImage);
             $targetFilePath = $uploadDirectory . $uploadedFileName;
             $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);

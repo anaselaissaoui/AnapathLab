@@ -47,6 +47,7 @@ $resultNotifications = $contentNotifications->fetchAll();
         <div class="modal fade show" id="exampleModalCenter" tabindex="-3" role="dialog" aria-labelledby="exampleModalCenterTitle" style="display: hidden;" aria-modal="true">
         </div>
     </div>
+   
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
@@ -200,6 +201,59 @@ $resultNotifications = $contentNotifications->fetchAll();
 
         <script>
             $(document).ready(function() {
+                var deleteProductId = null;
+                $(document).on('click', '.delete-button', function(e) {
+                    function deleteProduct() {
+    deleteProductId = proId;
+  }
+                    var proId = $(this).attr('id');
+                    e.preventDefault();
+                var proId = $(this).attr('id');
+
+                $.ajax({
+                    url: './delete.php',
+                    type: 'GET',
+                    data: {
+                        id: proId
+                    },
+                    success: function(response) {
+                        $('#exampleModalCenter').html(response);
+                        $('#exampleModalCenter').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                });})
+                $(document).on('click', '.confirmDelete', function(e) {
+                    
+                    var proId = $(this).attr('id');
+                  
+                    // Send an AJAX request to delete the product
+                    $.ajax({
+                        url: './delete_product.php',
+                        type: 'POST',
+                        data: {
+                        productId: proId
+                        },
+                        success: function(response) {
+                        // Product deleted successfully, perform any necessary UI updates
+                       
+                        window.location.href = "./dispoProducts.php"; 
+                        },
+                        error: function() {
+                        // Error occurred during deletion
+                        alert('An error occurred while deleting the product.');
+                        },
+                        complete: function() {
+                        // Reset the deleteProductId variable
+                        deleteProductId = null;
+                        // Hide the confirmation modal
+                        $('#confirmationModal').modal('hide');}
+                        
+                    });
+    
+                  })
+
 
 
                 /*Function to send both the selected radio button value and search input value to the PHP script with the change of radioButton*/
@@ -339,16 +393,20 @@ $resultNotifications = $contentNotifications->fetchAll();
         technics.push($(this).val());
     });
 
+    var formData = new FormData();
+    formData.append('pro_id', proId);
+    formData.append('name', name);
+    formData.append('unit', unit);
+    formData.append('condition', condition);
+    formData.append('technics', technics.join(', '));
+    formData.append('image', $('#image')[0].files[0]);
+
     $.ajax({
         url: 'confirmEdit.php',
         type: 'POST',
-        data: {
-            pro_id: proId,
-            name: name,
-            unit: unit,
-            condition: condition,
-            technics: technics.join(', ') // Convert the array to a comma-separated string
-        },
+        data: formData,
+        contentType: false,
+        processData: false,
         success: function(response) {
             console.log(response);
             window.location.href = "./dispoProducts.php";
@@ -357,7 +415,11 @@ $resultNotifications = $contentNotifications->fetchAll();
             console.log(error);
         }
     });
+    
+    
+
 });
+
         </script>
 </body>
 

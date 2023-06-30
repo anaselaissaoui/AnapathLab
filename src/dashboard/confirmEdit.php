@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':pro_unit', $unit);
         $stmt->bindParam(':pro_condition', $condition);
         $stmt->bindParam(':pro_techn', $technics);
-        
+
         if ($stmt->execute()) {
             echo "Update successful";
         } else {
@@ -28,13 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
+
+    // Handle file upload
+    $newPicture = $_FILES['image']['name'];
+    if (!empty($newPicture)) {
+        $uploadDirectory = '../../assets/pro_Pictures/';
+
+        // Handle file upload
+        $tempFile = $_FILES['image']['tmp_name'];
+        $targetFile = $uploadDirectory . basename($newPicture);
+        move_uploaded_file($tempFile, $targetFile);
+
+        // Update the pro_img column in the database
+        $updateQuery = "UPDATE product SET pro_img = '$targetFile' WHERE pro_id = '$pro_id'";
+        $conn->exec($updateQuery);
+    }
+
     exit();
 } elseif (isset($_POST['Cancel'])) {
     header('Location: ./dispoProducts.php');
     exit();
 }
-
-    
-
-
 ?>

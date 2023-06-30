@@ -11,7 +11,8 @@ if (count($resultTable) > 0) {
                         <td>'.$row['pro_date_exp'].'</td>
                         <td>'.$row['pro_type'].'</td>
                         <td>'.$row['pro_condition'].'</td>
-                        <td  class="text-center"><a data-pro-id="'.$row['pro_id'].'" class="btn btn-sm btn-prim" href="">Details</a><a id="' . $row['pro_id'] . '" class="btn btn-sm btn-primary ms-1 edit-button">Modifier</a>
+                        <td  class="text-center"><a data-pro-id="'.$row['pro_id'].'" class="btn btn-sm btn-prim" href="">Details</a><a id="' . $row['pro_id'] . '" class="btn btn-sm btn-primary ms-1 edit-button">Modifier</a><a id="' . $row['pro_id'] . '" class="btn btn-sm btn-danger ms-1 delete-button"><i class="bi bi-trash"></i></a>
+
                         </td>
                     </tr>';
                     }
